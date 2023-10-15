@@ -1,0 +1,24 @@
+name: Create Backend PR
+
+on:
+  push:
+    branches:
+      - backend
+
+
+permissions:
+  pull-requests: write
+
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-latest
+
+    steps: 
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: pull-request
+        run: |
+          gh_pr_up() { gh pr create $* || gh pr edit $* }
+          gh_pr_up --title "Create Backend PR" --body "This PR was created automatically by a GitHub Action."
