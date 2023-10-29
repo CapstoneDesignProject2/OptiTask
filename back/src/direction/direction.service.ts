@@ -9,6 +9,12 @@ import { CreateDailyHabitDto } from './dto/create-daily-habit-dto';
 import { UpdateDailyHabitDto } from './dto/update-daily-habit-dto';
 import { CreateCheckListDto } from './dto/create-check-list-dto';
 import { UpdateCheckListDto } from './dto/update-check-list-dto';
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.GPT_API_KEY,
+  organization: process.env.GPT_ORG_ID,
+});
 
 @Injectable()
 export class DirectionService {
