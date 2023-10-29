@@ -1,24 +1,28 @@
 name: Create Frontend PR
 
 on:
-  push:
+  pull_request:
     branches:
       - frontend
 
-
 permissions:
   pull-requests: write
-
 
 jobs:
   create_pr:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: pull-request
+      - name: Check PR event
         run: |
-          gh_pr_up() { gh pr create $* || gh pr edit $* }
-          gh_pr_up --title "Create Frontend PR" --body "This PR was created automatically by a GitHub Action."
+          if [[ $GITHUB_EVENT_NAME == 'pull_request' && ${{ github.event.action }} == 'closed' && ${{ github.event.pull_request.base.ref }} == 'frontend' && ${{ github.event.pull_request.base.repo.full_name }} == ${{ github.repository }} ]]; then
+            echo "Creating PR from frontend to main..."
+            git checkout -b main
+            git push origin main
+            gh pr create --base main --head frontend --title "Merge frontend to main" --body "This PR was created automatically after merging 'subbranch->frontend' to 'frontend'."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

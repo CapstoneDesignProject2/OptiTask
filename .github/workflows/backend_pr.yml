@@ -1,24 +1,28 @@
 name: Create Backend PR
 
 on:
-  push:
+  pull_request:
     branches:
       - backend
 
-
 permissions:
   pull-requests: write
-
 
 jobs:
   create_pr:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: pull-request
+      - name: Check PR event
         run: |
-          gh_pr_up() { gh pr create $* || gh pr edit $* }
-          gh_pr_up --title "Create Backend PR" --body "This PR was created automatically by a GitHub Action."
+          if [[ $GITHUB_EVENT_NAME == 'pull_request' && ${{ github.event.action }} == 'closed' && ${{ github.event.pull_request.base.ref }} == 'backend' && ${{ github.event.pull_request.base.repo.full_name }} == ${{ github.repository }} ]]; then
+            echo "Creating PR from backend to main..."
+            git checkout -b main
+            git push origin main
+            gh pr create --base main --head backend --title "Merge backend to main" --body "This PR was created automatically after merging 'subbranch->backend' to 'backend'."
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
