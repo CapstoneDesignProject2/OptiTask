@@ -41,7 +41,7 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t EarlyStopping:latest .
-        docker tag EarlyStopping:latest EarlyStopping:$(date +%s)
+        docker build -t earlystopping:latest .
+        docker tag earlystopping:latest earlystopping:$(date +%s)
 
 
