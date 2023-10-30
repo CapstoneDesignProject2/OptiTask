@@ -25,11 +25,14 @@ jobs:
         cd ../front
         npm install
 
-    - name: Build Backend and Frontend
+    - name: Build Backend
       run: |
         cd back
         npm run build
-        cd ../front
+
+    - name: Build Frontend
+      run: |
+        cd front
         npm run build
 
     - name: Build Docker Image
