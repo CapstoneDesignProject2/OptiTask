@@ -5,10 +5,19 @@ import { UpdateTargetDto } from './dto/update-target-dto';
 import { CreateObstacleDto } from './dto/create-obstacle-dto';
 import { UpdateObstacleDto } from './dto/update-obstacle-dto';
 import { DeleteObstacleDto } from './dto/delete-obstacle-dto';
+import { FindObstacleDto } from './dto/find-obstacle-dto';
 import { CreateDailyHabitDto } from './dto/create-daily-habit-dto';
 import { UpdateDailyHabitDto } from './dto/update-daily-habit-dto';
+import { FindDailyHabitDto } from './dto/find-daily-habit-dto';
 import { CreateCheckListDto } from './dto/create-check-list-dto';
 import { UpdateCheckListDto } from './dto/update-check-list-dto';
+import { OpenAI } from "openai";
+import { dir } from 'console';
+
+const openai = new OpenAI({
+  apiKey: process.env.GPT_API_KEY,
+  organization: process.env.GPT_ORG_ID,
+});
 
 @Injectable()
 export class DirectionService {
@@ -17,6 +26,7 @@ export class DirectionService {
   findAllDirection(): Direction[] {
     return this.directions;
   }
+  
   //목표
   createTarget(createTargetDto: CreateTargetDto) {
     this.directions.push({
@@ -38,6 +48,7 @@ export class DirectionService {
       return direction;
     });
   }
+  
   //장애물
   createObstacle(createObstacleDto: CreateObstacleDto) {
     this.directions = this.directions.map((direction) => {
@@ -74,9 +85,26 @@ export class DirectionService {
       return direction;
     });
   }
-  /* findObstacleForTarget(): string {
-    return 'gpt 요청';
-  } */
+  async findObstacleForTarget(findObstacleDto: FindObstacleDto) {
+    this.directions = await Promise.all(this.directions.map(async (direction) => {
+      if (direction.id === findObstacleDto.id) {
+        const prompt = `${direction.target}을 달성하기 위한 1개월 이내 목표 3가지를 각각 완결된 단어로 '\\n'로 구분해서 제시해줘.\n`;
+        const gptResponse = await openai.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'gpt-3.5-turbo',
+        });
+
+        const newObstacle = gptResponse.choices[0].message.content.split('\n');
+        direction.obstacle = direction.obstacle.concat(newObstacle);
+
+        return {
+          ...direction
+        };
+      }
+      return direction;
+    }));
+  }
+  
   //하루 습관
   createDailyHabit(createDailyHabitDto: CreateDailyHabitDto) {
     this.directions = this.directions.map((direction) => {
@@ -102,9 +130,26 @@ export class DirectionService {
       return direction;
     });
   }
-  /* findDailyHabitForTarget(): string {
-    return 'gpt 요청';
-  } */
+  async findDailyHabitForTarget(findDailyHabitDto: FindDailyHabitDto) {
+    this.directions = await Promise.all(this.directions.map(async (direction) => {
+      if (direction.id === findDailyHabitDto.id) {
+        const prompt = `${direction.obstacle[findDailyHabitDto.index]}을 달성하기 위한 하루 체크리스트를 '\\n'로 구분해서 3개 제시해줘.\n`;
+        const gptResponse = await openai.chat.completions.create({
+          messages: [{ role: 'user', content: prompt }],
+          model: 'gpt-3.5-turbo',
+        });
+
+        const newDailyHabit = gptResponse.choices[0].message.content.split('\n');
+        direction.dailyHabit = direction.dailyHabit.concat(newDailyHabit);
+
+        return {
+          ...direction,
+        };
+      }
+      return direction;
+    }));
+  }
+
   //체크리스트
   createCheckList(createCheckListDto: CreateCheckListDto) {
     this.directions = this.directions.map((direction) => {
