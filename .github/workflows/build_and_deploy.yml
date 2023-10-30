@@ -29,11 +29,15 @@ jobs:
       run: |
         cd back
         npm run build
+      env:
+        CI: ""
 
     - name: Build Frontend
       run: |
         cd front
         npm run build
+      env:
+        CI: ""
 
     - name: Build Docker Image
       run: |
