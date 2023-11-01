@@ -1,14 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateActivityRequest } from './dto/create-activity-request';
-import { UpdateActivityRequest } from './dto/update-activity-request';
-import { DeleteActivityRequest } from './dto/delete-activity-request';
-import { Activity } from './entity/activity-entity';
+import { CreateActivityRequest, UpdateActivityRequest, DeleteActivityRequest } from './activity-dto';
+import { Activity } from './activity-entity';
 
 @Injectable()
 export class ActivityService {
   private activities: Activity[] = [];
 
-  //주간 활동 조회 (활동) GET
+  //주간 활동 조회
   findWeeklyActivity(startDay: Date, endDay: Date): Activity[] {
     const weeklyActivity: Activity[] = [];
     this.activities.forEach((activity) => {
@@ -19,7 +17,7 @@ export class ActivityService {
     });
     return weeklyActivity;
   }
-  //활동 생성 (활동) POST
+  //활동 생성 (활동)
   createActivity(createActivityDto: CreateActivityRequest) {
     this.activities.push({
       id: this.activities.length + 1,
@@ -27,10 +25,10 @@ export class ActivityService {
       endTime: createActivityDto.endTime,
       content: createActivityDto.content,
       tag: createActivityDto.tag,
-      sucess: createActivityDto.sucess,
+      sucess: createActivityDto.success,
     });
   }
-  //활동 수정 (활동) PATCH
+  //활동 수정 (활동)
   updateActivity(updateActivityDto: UpdateActivityRequest) {
     this.activities = this.activities.map((activity) => {
       if (activity.id === updateActivityDto.id) {
@@ -44,7 +42,7 @@ export class ActivityService {
       return activity;
     });
   }
-  //활동 삭제 (활동) DELETE
+  //활동 삭제 (활동)
   deleteActivity(deleteActivityDto: DeleteActivityRequest) {
     this.activities = this.activities.filter( (activity) => {
       if (activity.id !== deleteActivityDto.id) {
