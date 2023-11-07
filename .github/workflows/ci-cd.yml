@@ -49,6 +49,8 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.SSH_HOST }}
         USER: ${{ secrets.SSH_USER }}
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        ECR_REGISTRY: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
       run: |
         eval $(ssh-agent -s)
         ssh-add - <<< "${SSH_PRIVATE_KEY}"
@@ -56,6 +58,7 @@ jobs:
         
         # SSH to the EC2 instance and pull the latest Docker image and restart the container
         ssh $SSH_ARGS $USER@$HOST << EOF
+          $(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY)
         	docker-compose -f ~/docker-compose.yml pull
         	docker-compose -f ~/docker-compose.yml up -d
         EOF
