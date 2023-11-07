@@ -57,8 +57,8 @@ jobs:
         export SSH_ARGS="-o StrictHostKeyChecking=no"
         
         # SSH to the EC2 instance and pull the latest Docker image and restart the container
-        ssh $SSH_ARGS $USER@$HOST << EOF
-          $(aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ECR_REGISTRY)
+        ssh $SSH_ARGS $USER@$HOST << 'EOF'
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
         	docker-compose -f ~/docker-compose.yml pull
         	docker-compose -f ~/docker-compose.yml up -d
         EOF
