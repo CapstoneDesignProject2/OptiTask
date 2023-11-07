@@ -7,9 +7,9 @@ export class ActivityController {
   constructor(private readonly activityService: ActivityService) {}
 
   //주간 활동 조회 (활동) GET
-  @Get(':startDay/:endDay')
-  findWeeklyActivity(@Param('startDay') startDay: Date, @Param('endDay') endDay: Date) {
-    return this.activityService.findWeeklyActivity(startDay, endDay);
+  @Get(':pastWeeksAgo')
+  findWeeklyActivity(@Param('pastWeeksAgo') pastWeeksAgo: number) {
+    return this.activityService.findWeeklyActivity(pastWeeksAgo);
   }
   //활동 생성 (활동) POST
   @Post()

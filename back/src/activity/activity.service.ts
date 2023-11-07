@@ -7,14 +7,21 @@ export class ActivityService {
   private activities: Activity[] = [];
 
   //주간 활동 조회
-  findWeeklyActivity(startDay: Date, endDay: Date): Activity[] {
+  findWeeklyActivity(pastWeeksAgo: number): Activity[] {
     const weeklyActivity: Activity[] = [];
+    const startDate = new Date()
+    const endDate = new Date()
+
+    startDate.setDate(startDate.getDate() - startDate.getDay() + 1 - (7 * pastWeeksAgo))
+    endDate.setDate(startDate.getDate() + 6)
+
     this.activities.forEach((activity) => {
-      if (startDay <= activity.startTime
-        && activity.endTime <= endDay) {
+      if (startDate <= activity.startTime
+        && activity.endTime <= endDate) {
         weeklyActivity.push(activity);
       }
     });
+
     return weeklyActivity;
   }
   //활동 생성 (활동)
