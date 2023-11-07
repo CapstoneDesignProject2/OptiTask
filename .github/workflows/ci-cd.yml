@@ -58,4 +58,4 @@ jobs:
         ssh $SSH_ARGS $USER@$HOST << EOF
         	docker-compose -f ~/docker-compose.yml pull
         	docker-compose -f ~/docker-compose.yml up -d
-        	EOF
+        EOF
