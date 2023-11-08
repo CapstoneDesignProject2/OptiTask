@@ -14,13 +14,19 @@ import { UpdateCheckListDto } from './dto/update-check-list-dto';
 import { OpenAI } from "openai";
 import { dir } from 'console';
 
-const openai = new OpenAI({
-  apiKey: process.env.GPT_API_KEY,
-  organization: process.env.GPT_ORG_ID,
-});
+
 
 @Injectable()
 export class DirectionService {
+  private openai: OpenAI;
+
+  constructor() {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      organization: process.env.OPENAI_ORG_ID,
+    });
+  }
+
   private directions: Direction[] = [];
   //모든 방향
   findAllDirection(): Direction[] {
@@ -89,7 +95,7 @@ export class DirectionService {
     this.directions = await Promise.all(this.directions.map(async (direction) => {
       if (direction.id === findObstacleDto.id) {
         const prompt = `${direction.target}을 달성하기 위한 1개월 이내 목표 3가지를 각각 완결된 단어로 '\\n'로 구분해서 제시해줘.\n`;
-        const gptResponse = await openai.chat.completions.create({
+        const gptResponse = await this.openai.chat.completions.create({
           messages: [{ role: 'user', content: prompt }],
           model: 'gpt-3.5-turbo',
         });
@@ -134,7 +140,7 @@ export class DirectionService {
     this.directions = await Promise.all(this.directions.map(async (direction) => {
       if (direction.id === findDailyHabitDto.id) {
         const prompt = `${direction.obstacle[findDailyHabitDto.index]}을 달성하기 위한 하루 체크리스트를 '\\n'로 구분해서 3개 제시해줘.\n`;
-        const gptResponse = await openai.chat.completions.create({
+        const gptResponse = await this.openai.chat.completions.create({
           messages: [{ role: 'user', content: prompt }],
           model: 'gpt-3.5-turbo',
         });
