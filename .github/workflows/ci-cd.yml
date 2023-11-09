@@ -1,0 +1,70 @@
+name: Continuous Integration and Deployment
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Make .env file
+      run: |
+        cd ./back
+        echo "OPENAI_API_KEY = '${{ secrets.OPENAI_API_KEY }}'" >> .env
+        echo "OPENAI_ORG_ID = '${{ secrets.OPENAI_ORG_ID }}'" >> .env
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+        aws-region: ap-northeast-2
+
+    - name: Login to ECR
+      run: |
+        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+
+    - name: Build and push Docker images (backend)
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./back/Dockerfile
+        push: true
+        tags: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com/todoinsight:backend
+
+    - name: Build and push Docker images (frontend)
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        file: ./front/Dockerfile
+        push: true
+        tags: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com/todoinsight:frontend
+
+    - name: Deploy to EC2
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        HOST: ${{ secrets.SSH_HOST }}
+        USER: ${{ secrets.SSH_USER }}
+        AWS_REGION: ap-northeast-2
+        ECR_REGISTRY: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+      run: |
+        eval $(ssh-agent -s)
+        ssh-add - <<< "${SSH_PRIVATE_KEY}"
+        export SSH_ARGS="-o StrictHostKeyChecking=no"
+        
+        # SSH to the EC2 instance and pull the latest Docker image and restart the container
+        ssh $SSH_ARGS $USER@$HOST << 'EOF'
+          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+        	docker-compose -f ~/docker-compose.yml pull
+        	docker-compose -f ~/docker-compose.yml up -d
+        EOF
