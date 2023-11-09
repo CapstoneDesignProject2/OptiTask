@@ -1,5 +1,5 @@
 import React, { useEffect, useState} from "react";
-import {useNavigagte} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 
 function Mypage({}) {
     
