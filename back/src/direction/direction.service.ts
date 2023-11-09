@@ -18,6 +18,15 @@ import { dir } from 'console';
 
 @Injectable()
 export class DirectionService {
+  private openai: OpenAI;
+
+  constructor() {
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      organization: process.env.OPENAI_ORG_ID,
+    });
+  }
+
   private directions: Direction[] = [];
   private openai: OpenAI;
 
