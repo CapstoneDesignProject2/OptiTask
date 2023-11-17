@@ -7,6 +7,7 @@ import Join from './Pages/Join';
 import Forum from './Pages/Forum';
 import Mypage from './Pages/Mypage';
 import DirectionCreate from './Pages/DirectionCreate';
+import WeeklyReport from './Pages/WeeklyReport';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
       <Route path="/Forum"element={<Forum />} />
       <Route path="/Mypage"element={<Mypage />} />  
       <Route path="/DirectionCreate"element={<DirectionCreate />} />
+      <Route path="/WeeklyReport"element={<WeeklyReport/>} />
     </Routes>
   );
 }
