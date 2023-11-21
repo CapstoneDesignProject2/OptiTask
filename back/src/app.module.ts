@@ -8,6 +8,7 @@ import { ActivityModule } from './activity/activity.module';
 import { PostModule } from './post/post.module';
 import { ReportModule } from './report/report.module';
 import { ConsultingModule } from './consulting/consulting.module';
+import { ProjectModule } from './project/project.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { ConsultingModule } from './consulting/consulting.module';
     ActivityModule,
     PostModule,
     ReportModule,
-    ConsultingModule
+    ConsultingModule,
+    ProjectModule
   ],
   controllers: [AppController],
   providers: [AppService],
