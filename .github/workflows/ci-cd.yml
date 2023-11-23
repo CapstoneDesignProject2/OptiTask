@@ -49,6 +49,7 @@ jobs:
         cache-from: type=registry,ref=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:backend
         cache-to: type=inline
 
+
     - name: Build and push Docker images (frontend)
       uses: docker/build-push-action@v2
       with:
