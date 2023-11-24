@@ -9,6 +9,7 @@ import { PostModule } from './post/post.module';
 import { ReportModule } from './report/report.module';
 import { ConsultingModule } from './consulting/consulting.module';
 import { ProjectModule } from './project/project.module';
+import { TodoModule } from './todo/todo.module';
 
 @Module({
   imports: [
@@ -19,7 +20,8 @@ import { ProjectModule } from './project/project.module';
     PostModule,
     ReportModule,
     ConsultingModule,
-    ProjectModule
+    ProjectModule,
+    TodoModule
   ],
   controllers: [AppController],
   providers: [AppService],
