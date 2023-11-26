@@ -9,6 +9,10 @@ function Join() {
         navigate("/");
     }
 
+    const handleSignUp = async (id, pw) => {
+        
+    };
+
     return(
         <div>
             <h1 onClick={goToHome} style={{ fontSize: 50, textAlign: 'center', marginBottom: '40px' } }>EarlyStopping</h1>
