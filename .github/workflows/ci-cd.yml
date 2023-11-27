@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  build-and-deploy:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -47,7 +47,10 @@ jobs:
         context: .
         file: ./back/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:backend
+        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/todoinsight:backend
+        cache-from: type=registry,ref=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:backend
+        cache-to: type=inline
+
 
     - name: Build and push Docker images (frontend)
       uses: docker/build-push-action@v2
@@ -55,8 +58,15 @@ jobs:
         context: .
         file: ./front/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:frontend
+        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/todoinsight:frontend
+        cache-from: type=registry,ref=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:frontend
+        cache-to: type=inline
 
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
     - name: Deploy to EC2
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
