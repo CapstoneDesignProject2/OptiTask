@@ -70,24 +70,34 @@ jobs:
         echo "Cleaning up old backend images"
         image_digests=$(aws ecr list-images --repository-name $BACKEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
 
-        images_to_keep=$(echo "$image_digests" | tail -n 2)
+        image_count=$(echo "$image_digests" | wc -w)
 
-        for digest in $image_digests; do
-          if [[ ! $images_to_keep =~ $digest ]]; then
-            aws ecr batch-delete-image --repository-name $BACKEND_REPOSITORY --image-ids imageDigest=$digest
-          fi
-        done
+        if [ "$image_count" -gt 2 ]; then
+          images_to_keep=$(echo "$image_digests" | tail -n 2)
+          for digest in $image_digests; do
+            if [[ ! $images_to_keep =~ $digest ]]; then
+              aws ecr batch-delete-image --repository-name $BACKEND_REPOSITORY --image-ids imageDigest=$digest
+            fi
+          done
+        else
+          echo "Not enough backend images to clean up"
+        fi
   
         echo "Cleaning up old frontend images"
         image_digests=$(aws ecr list-images --repository-name $FRONTEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
 
-        images_to_keep=$(echo "$image_digests" | tail -n 2)
+        image_count=$(echo "$image_digests" | wc -w)
 
-        for digest in $image_digests; do
-          if [[ ! $images_to_keep =~ $digest ]]; then
-            aws ecr batch-delete-image --repository-name $FRONTEND_REPOSITORY --image-ids imageDigest=$digest
-          fi
-        done
+        if [ "$image_count" -gt 2 ]; then
+          images_to_keep=$(echo "$image_digests" | tail -n 2)
+          for digest in $image_digests; do
+            if [[ ! $images_to_keep =~ $digest ]]; then
+              aws ecr batch-delete-image --repository-name $FRONTEND_REPOSITORY --image-ids imageDigest=$digest
+            fi
+          done
+        else
+          echo "Not enough frontend images to clean up"
+        fi
 
   deploy:
     runs-on: ubuntu-latest
