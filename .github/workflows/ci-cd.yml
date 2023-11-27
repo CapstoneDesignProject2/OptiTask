@@ -57,37 +57,33 @@ jobs:
         push: true
         tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:frontend
 
-        - name: Clean up old ECR images
-        run: |
-          # ECR 리포지토리 설정
-          ECR_REGISTRY=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-          BACKEND_REPOSITORY=todoinsight
-          FRONTEND_REPOSITORY=todoinsight
+    - name: Clean up old ECR images
+      run: |
+        ECR_REGISTRY=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+        BACKEND_REPOSITORY=todoinsight
+        FRONTEND_REPOSITORY=todoinsight
+
+        echo "Cleaning up old backend images"
+        image_digests=$(aws ecr list-images --repository-name $BACKEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
+
+        images_to_keep=$(echo "$image_digests" | tail -n 2)
+
+        for digest in $image_digests; do
+          if [[ ! $images_to_keep =~ $digest ]]; then
+            aws ecr batch-delete-image --repository-name $BACKEND_REPOSITORY --image-ids imageDigest=$digest
+          fi
+        done
   
-          # 백엔드 이미지 정리
-          echo "Cleaning up old backend images"
-          image_digests=$(aws ecr list-images --repository-name $BACKEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
-  
-          # 최신 2개 이미지 유지
-          images_to_keep=$(echo "$image_digests" | tail -n 2)
-  
-          for digest in $image_digests; do
-            if [[ ! $images_to_keep =~ $digest ]]; then
-              aws ecr batch-delete-image --repository-name $BACKEND_REPOSITORY --image-ids imageDigest=$digest
-            fi
-          done
-  
-          # 프론트엔드 이미지 정리
-          echo "Cleaning up old frontend images"
-          image_digests=$(aws ecr list-images --repository-name $FRONTEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
-  
-          images_to_keep=$(echo "$image_digests" | tail -n 2)
-  
-          for digest in $image_digests; do
-            if [[ ! $images_to_keep =~ $digest ]]; then
-              aws ecr batch-delete-image --repository-name $FRONTEND_REPOSITORY --image-ids imageDigest=$digest
-            fi
-          done
+        echo "Cleaning up old frontend images"
+        image_digests=$(aws ecr list-images --repository-name $FRONTEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
+
+        images_to_keep=$(echo "$image_digests" | tail -n 2)
+
+        for digest in $image_digests; do
+          if [[ ! $images_to_keep =~ $digest ]]; then
+            aws ecr batch-delete-image --repository-name $FRONTEND_REPOSITORY --image-ids imageDigest=$digest
+          fi
+        done
 
     - name: Deploy to EC2
       env:
