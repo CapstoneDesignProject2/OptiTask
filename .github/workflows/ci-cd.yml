@@ -21,8 +21,15 @@ jobs:
     - name: Make .env file
       run: |
         cd ./back
-        echo "OPENAI_API_KEY = '${{ secrets.OPENAI_API_KEY }}'" >> .env
-        echo "OPENAI_ORG_ID = '${{ secrets.OPENAI_ORG_ID }}'" >> .env
+        echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+        echo "OPENAI_ORG_ID=${{ secrets.OPENAI_ORG_ID }}" >> .env
+        echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
+        echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
+        echo "DB_USER=${{ secrets.DB_USER }}" >> .env
+        echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+        echo "DB_NAME=OPTITASK" >> .env
+        echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+        echo "JWT_EXPIRES_IN=1d" >> .env
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4
