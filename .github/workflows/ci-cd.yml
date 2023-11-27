@@ -47,7 +47,7 @@ jobs:
         context: .
         file: ./back/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:backend
+        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask-backend:backend
 
     - name: Build and push Docker images (frontend)
       uses: docker/build-push-action@v2
@@ -55,13 +55,13 @@ jobs:
         context: .
         file: ./front/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask:frontend
+        tags: 238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/optitask-frontend:frontend
 
     - name: Clean up old ECR images
       run: |
         ECR_REGISTRY=238150433958.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
-        BACKEND_REPOSITORY=todoinsight
-        FRONTEND_REPOSITORY=todoinsight
+        BACKEND_REPOSITORY=optitask-backend
+        FRONTEND_REPOSITORY=optitask-frontend
 
         echo "Cleaning up old backend images"
         image_digests=$(aws ecr list-images --repository-name $BACKEND_REPOSITORY --query 'imageIds[*].imageDigest' --output text)
