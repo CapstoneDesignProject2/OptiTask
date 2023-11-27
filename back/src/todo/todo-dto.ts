@@ -1,5 +1,5 @@
 export class CreateTodoRequest {
-  todoName: string
+  todoName: string;
   startTime: string;
   endTime: string;
   success: boolean
@@ -7,7 +7,7 @@ export class CreateTodoRequest {
 
 export class UpdateTodoRequest {
   todoId: number;
-  todoName: string
+  todoName: string;
   startTime: string;
   endTime: string;
   success: boolean

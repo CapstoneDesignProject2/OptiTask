@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { ReportController } from './report.controller';
 import { ReportService } from './report.service';
-import { ActivityService } from 'src/activity/activity.service';
+import { TodoService } from 'src/todo/todo.service';
 
 @Module({
-  providers: [ReportService, ActivityService],
+  providers: [ReportService, TodoService],
   controllers: [ReportController]
 })
 export class ReportModule {}

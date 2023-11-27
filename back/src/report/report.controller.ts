@@ -5,9 +5,12 @@ import { ReportService } from './report.service';
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  //주간 보고서 조회 (보고서) GET
   @Get(':pastWeeksAgo')
   findWeeklyReport(@Param('pastWeeksAgo') pastWeeksAgo: number) {
     return this.reportService.findWeeklyReport(pastWeeksAgo);
+  }
+  @Get()
+  findReportTrend() {
+    return this.reportService.findReportTrend();
   }
 }

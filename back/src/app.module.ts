@@ -3,11 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config'; // .env
 import { UserModule } from './user/user.module';
-import { DirectionModule } from './direction/direction.module';
-import { ActivityModule } from './activity/activity.module';
-import { PostModule } from './post/post.module';
 import { ReportModule } from './report/report.module';
-import { ConsultingModule } from './consulting/consulting.module';
 import { ProjectModule } from './project/project.module';
 import { TodoModule } from './todo/todo.module';
 
@@ -15,11 +11,7 @@ import { TodoModule } from './todo/todo.module';
   imports: [
     ConfigModule.forRoot(), // .env
     UserModule,
-    DirectionModule,
-    ActivityModule,
-    PostModule,
     ReportModule,
-    ConsultingModule,
     ProjectModule,
     TodoModule
   ],
