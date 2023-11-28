@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config'; // .env
 import { UserModule } from './user/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ReportModule } from './report/report.module';
+//import { ReportModule } from './report/report.module';
 import { ProjectModule } from './project/project.module';
 import { TodoModule } from './todo/todo.module';
 
@@ -29,7 +29,7 @@ import { TodoModule } from './todo/todo.module';
     }),
     UserModule,
     AuthModule,
-    ReportModule,
+    //ReportModule,
     ProjectModule,
     TodoModule
   ],
