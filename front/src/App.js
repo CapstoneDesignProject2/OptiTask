@@ -1,24 +1,27 @@
 import { Route, Routes } from 'react-router-dom';
-import logo from './logo.svg';
 import './App.css';
-import Home from './Pages/Home';
-import Login from './Pages/Login';
-import Join from './Pages/Join';
 import Forum from './Pages/Forum';
+import Home from './Pages/Home';
+import Join from './Pages/Join';
+import Login from './Pages/Login';
 import Mypage from './Pages/Mypage';
-import DirectionCreate from './Pages/DirectionCreate';
+import ProjectCreate from "./Pages/ProjectCreate";
 import WeeklyReport from './Pages/WeeklyReport';
+import Project from "./Pages/project";
+
 
 const App = () => {
   return (
     <Routes>
-      <Route path="/"element={<Home />} />
-      <Route path="/login"element={<Login />} />
-      <Route path="/join"element={<Join />} />
-      <Route path="/Forum"element={<Forum />} />
-      <Route path="/Mypage"element={<Mypage />} />  
-      <Route path="/DirectionCreate"element={<DirectionCreate />} />
-      <Route path="/WeeklyReport"element={<WeeklyReport/>} />
+      <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/join" element={<Join />} />
+      <Route path="/Forum" element={<Forum />} />
+      <Route path="/Mypage" element={<Mypage />} />
+      <Route path="/DirectionCreate" element={<DirectionCreate />} />
+      <Route path="/ProjectCreate" element={<ProjectCreate />} />
+      <Route path="/Project/:projectId" element={<Project />} />
+      <Route path="/WeeklyReport/:projectId" element={<WeeklyReport />} />
     </Routes>
   );
 }
