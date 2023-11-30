@@ -35,4 +35,13 @@ export class ProjectService {
     this.projects = this.projects.filter((project) => project.projectId !== deleteProejctRequest.projectId);
     this.todoService.deleteTodoByProject(deleteProejctRequest.projectId);
   }
+  findProjectByProjectId(projectId: number) {
+    let findProject = new Project();
+    this.projects.map((project) => {
+      if (project.projectId === projectId) {
+        findProject = project;
+      }
+    })
+    return findProject;
+  }
 }

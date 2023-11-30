@@ -9,5 +9,6 @@ import { TodoModule } from 'src/todo/todo.module';
     imports: [TypeOrmModule.forFeature([Project]), TodoModule],
     controllers: [ProjectController],
     providers: [ProjectService],
+    exports: [ProjectService]
 })
 export class ProjectModule {}
