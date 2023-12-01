@@ -6,6 +6,12 @@ function Home() {
     //이거는 서버에서 받아서 프로젝트 컨테이너들 썸네일 데이터 넣을것들 + 해당 프로젝트 페이지로 넘어갈 용도
     const [projects, setProjects] = useState([]);
 
+    
+    const goToLogin = () => {
+        navigate("/login");
+    }
+
+
     // 서버에서 프로젝트 데이터를 가져오는 함수
     useEffect(() => {
         // 서버로부터 프로젝트 데이터를 가져오는 로직을 여기에 구현합니다.
@@ -20,6 +26,7 @@ function Home() {
     return (
         <div>
             <h1>Home</h1>
+            <button onClick={goToLogin}>Login</button>
             <button onClick={() => navigate('/createproject')}>Create New Project</button>
             <div>
                 {projects.map(project => (
