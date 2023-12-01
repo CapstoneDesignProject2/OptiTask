@@ -17,6 +17,7 @@ export class ProjectService {
     newProject.projectName = createProjectRequest.projectName;
     newProject.deadline = createProjectRequest.deadline;
     this.projects.push(newProject);
+    //ProjectId로 바꾸고 DTO로 감싸기
     this.todoService.createTodoByProject(newProject, createProjectRequest.todoList);
   }
   updateProject(updateProjectRequest: UpdateProjectRequest) {

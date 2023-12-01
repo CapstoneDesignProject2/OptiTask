@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Patch, Post } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest } from './project.dto';
+import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse } from './project.dto';
 
 @Controller('project')
 export class ProjectController {
@@ -8,7 +8,7 @@ export class ProjectController {
 
   @Get()
   findAllProject() {
-    return this.projectService.findAllProject();
+    return new FindAllProjectResponse(this.projectService.findAllProject());
   }
   @Post()
   createProject(@Body() createProjectRequest: CreateProjectRequest) {
