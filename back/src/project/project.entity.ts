@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Todo } from 'src/todo/todo.entity';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class Project {
@@ -10,4 +11,7 @@ export class Project {
 
     @Column()
     deadline: Date;
+
+    @OneToMany(() => Todo, todo => todo.project)
+    todos: Todo[];
 }
