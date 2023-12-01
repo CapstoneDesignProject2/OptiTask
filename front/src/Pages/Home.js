@@ -1,10 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Title from '../Components/Title';
 
 function Home() {
     const navigate = useNavigate();
     //이거는 서버에서 받아서 프로젝트 컨테이너들 썸네일 데이터 넣을것들 + 해당 프로젝트 페이지로 넘어갈 용도
     const [projects, setProjects] = useState([]);
+
+    
+    const goToLogin = () => {
+        navigate("/login");
+    }
+
 
     // 서버에서 프로젝트 데이터를 가져오는 함수
     useEffect(() => {
@@ -19,8 +26,9 @@ function Home() {
 
     return (
         <div>
-            <h1>Home</h1>
-            <button onClick={() => navigate('/createproject')}>Create New Project</button>
+            <Title></Title>
+            <button onClick={goToLogin}>Login</button>
+            <button onClick={() => navigate('/ProjectCreate')}>Create New Project</button>
             <div>
                 {projects.map(project => (
                     <div key={project.id} onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer', border: '1px solid black', padding: '10px', margin: '10px' }}>
