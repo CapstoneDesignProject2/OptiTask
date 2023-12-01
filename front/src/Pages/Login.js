@@ -1,9 +1,11 @@
 import React, { useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
 import Button from '../Components/Button';
+import Title from '../Components/Title';
 
 function Login({}) {
     const navigate = useNavigate();
+    const [userId, setUserId] = useState(null);
 
     const goToHome = () => {
         navigate("/");
@@ -18,7 +20,7 @@ function Login({}) {
 
     return(
         <div>
-            <h1 onClick={goToHome} style={{ fontSize: 50, textAlign: 'center', marginBottom: '40px' } }>EarlyStopping</h1>
+            <Title></Title>
             <input type="text" name="id" placeholder="ID" style={{ width: '400px', height: '50px', fontSize: '20px', marginBottom: '15px' }} />
             <br />
             <input type="password" name="pw" placeholder="PW" style={{ width: '400px', height: '50px', fontSize: '20px', marginBottom: '15px' }} />
