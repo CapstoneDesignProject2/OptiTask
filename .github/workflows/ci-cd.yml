@@ -35,11 +35,11 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v4
       with:
         role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
-        aws-region: ap-northeast-2
+        aws-region: ${{ secrets.AWS_REGION }}
 
     - name: Login to ECR
       run: |
-        aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+        aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
     - name: Build and push Docker images (backend)
       uses: docker/build-push-action@v2
@@ -47,7 +47,7 @@ jobs:
         context: .
         file: ./back/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com/optitask-backend:backend
+        tags: ${{ secrets.ECR_REGISTRY }}/optitask-backend:backend
 
     - name: Build and push Docker images (frontend)
       uses: docker/build-push-action@v2
@@ -55,7 +55,7 @@ jobs:
         context: .
         file: ./front/Dockerfile
         push: true
-        tags: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com/optitask-frontend:frontend
+        tags: ${{ secrets.ECR_REGISTRY }}/optitask-frontend:frontend
 
   # cleanup-images:
   #   runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
   #   steps:
   #   - name: Clean up old ECR images
   #     run: |
-  #       ECR_REGISTRY=238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+  #       ECR_REGISTRY=${{ secrets.ECR_REGISTRY }}
   #       BACKEND_REPOSITORY=optitask-backend
   #       FRONTEND_REPOSITORY=optitask-frontend
 
@@ -108,8 +108,8 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         HOST: ${{ secrets.SSH_HOST }}
         USER: ${{ secrets.SSH_USER }}
-        AWS_REGION: ap-northeast-2
-        ECR_REGISTRY: 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+        AWS_REGION: ${{ secrets.AWS_REGION }}
+        ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
       run: |
         eval $(ssh-agent -s)
         ssh-add - <<< "${SSH_PRIVATE_KEY}"
@@ -117,7 +117,7 @@ jobs:
         
         # SSH to the EC2 instance and pull the latest Docker image and restart the container
         ssh $SSH_ARGS $USER@$HOST << 'EOF'
-          aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin 238150433958.dkr.ecr.ap-northeast-2.amazonaws.com
+          aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
         	docker-compose -f ~/docker-compose.yml pull
         	docker-compose -f ~/docker-compose.yml up -d
         EOF
