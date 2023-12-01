@@ -56,4 +56,4 @@ function Mypage({}) {
     );
 };
     
-export default MyPage;
+export default Mypage;
