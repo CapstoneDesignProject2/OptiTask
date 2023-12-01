@@ -18,7 +18,6 @@ const App = () => {
       <Route path="/join" element={<Join />} />
       <Route path="/Forum" element={<Forum />} />
       <Route path="/Mypage" element={<Mypage />} />
-      <Route path="/DirectionCreate" element={<DirectionCreate />} />
       <Route path="/ProjectCreate" element={<ProjectCreate />} />
       <Route path="/Project/:projectId" element={<Project />} />
       <Route path="/WeeklyReport/:projectId" element={<WeeklyReport />} />
