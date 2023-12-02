@@ -8,7 +8,13 @@ export class UsersController {
 
   @Post('signup')
   async signUp(@Body() user: User): Promise<User> {
-    return this.usersService.create(user);
+    const checkUser = await this.usersService.findOne(user.id);
+    if (checkUser) {
+      throw new Error('User already exists');
+    }
+    const newUser = await this.usersService.create(user);
+    delete newUser.password;
+    return newUser;
   }
 
   // TODO: more methods
