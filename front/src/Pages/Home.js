@@ -6,10 +6,15 @@ function Home() {
     const navigate = useNavigate();
     //이거는 서버에서 받아서 프로젝트 컨테이너들 썸네일 데이터 넣을것들 + 해당 프로젝트 페이지로 넘어갈 용도
     const [projects, setProjects] = useState([]);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     
     const goToLogin = () => {
         navigate("/login");
+    }
+
+    const goToLogout = () => {
+
     }
 
 
@@ -27,7 +32,11 @@ function Home() {
     return (
         <div>
             <Title></Title>
-            <button onClick={goToLogin}>Login</button>
+            { document.cookie.length ? (
+                <button onClick = {goToLogout}>Logout</button>
+            ) : (
+                <button onClick={goToLogin}>Login</button>
+            )}
             <button onClick={() => navigate('/ProjectCreate')}>Create New Project</button>
             <div>
                 {projects.map(project => (
