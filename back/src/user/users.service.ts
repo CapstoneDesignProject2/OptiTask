@@ -8,16 +8,16 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    private userRepository: Repository<User>,
   ) {}
 
   async create(user: User): Promise<User> {
     user.password = await bcrypt.hash(user.password, 10);
-    return this.usersRepository.save(user);
+    return this.userRepository.save(user);
   }
   
   async findOne(id: string): Promise<User> {
-    return this.usersRepository.findOne({ 
+    return this.userRepository.findOne({ 
       where: { id: id },
      });
   }
