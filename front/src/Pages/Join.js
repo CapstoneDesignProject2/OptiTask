@@ -25,7 +25,7 @@ function Join() {
             }
         } catch(error) {
             console.error("Signup error", error);
-            alert("Signup Failed");
+            alert("Signup error");
         }
     };
 
