@@ -13,7 +13,7 @@ export class Report {
     reportWeek: number;
 
     @Column()
-    totalTime: number;
+    weeklyTotalTime: number;
 
     @Column()
     successTodo: number;
