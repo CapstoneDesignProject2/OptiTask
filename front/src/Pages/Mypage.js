@@ -1,12 +1,9 @@
 import React, { useEffect, useState} from "react";
 import {useNavigate} from 'react-router-dom';
+import Title from '../Components/Title';
 
 function Mypage({}) {
-    const navigate = useNavigate();
 
-    const goToHome = () => {
-        navigate("/");
-    }
 
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -44,7 +41,7 @@ function Mypage({}) {
      
     return (
         <div>
-        <h1>My Page</h1>
+            <Title></Title>
         {userInfo && (
             <div>
             <p>Name: {userInfo.name}</p>
@@ -56,4 +53,4 @@ function Mypage({}) {
     );
 };
     
-export default MyPage;
+export default Mypage;
