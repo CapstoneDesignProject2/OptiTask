@@ -7,8 +7,8 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Get()
-  findAllProject() {
-    return new FindAllProjectResponse(this.projectService.findAllProject());
+  async findAllProject() {
+    return new FindAllProjectResponse(await this.projectService.findAllProject());
   }
   @Post()
   createProject(@Body() createProjectRequest: CreateProjectRequest) {
