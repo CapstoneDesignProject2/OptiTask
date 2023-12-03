@@ -43,7 +43,7 @@ export class ReportService {
   }
   @Cron('0 0 * * 1')
   async createWeeklyReport() {
-    const todos = await this.todoService.findAllTodo();
+    const todos = await this.todoService.findAllTodos();
     const projectStats = {};
 
     for (const todo of todos) {
