@@ -10,6 +10,10 @@ function Login({}) {
     const [id, setID] = useState("");
     const [pw, setPW] = useState("");
 
+    const goToHome = () => {
+        navigate("/");
+    }
+
     const goToJoin = () => {
         navigate("/join");
     }
@@ -20,7 +24,8 @@ function Login({}) {
             const data = response.data;
 
             if (data.access_token) {
-                navigate("/", {state: { userID: data.userID, id : data.id } });
+                localStorage.setItem("access_token", data.access_token); // JWT 토큰을 로컬 스토리지에 저장
+                goToHome();
             } else {
                 // 로그인 실패 처리
                 alert("Login failed");
