@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Title from '../Components/Title';
 
 function Home() {
@@ -7,7 +7,6 @@ function Home() {
     //이거는 서버에서 받아서 프로젝트 컨테이너들 썸네일 데이터 넣을것들 + 해당 프로젝트 페이지로 넘어갈 용도
     const [projects, setProjects] = useState([]);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { userID, id } = location.state || {};
     
     const goToLogin = () => {
         navigate("/login");
