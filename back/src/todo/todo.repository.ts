@@ -10,7 +10,7 @@ export class TodoRepository extends Repository<Todo> {
   async findTodosByProjectId(projectId: number): Promise<Todo[]> {
     return this.find({ where: {project: {projectId}}});
   }
-  async findTodo(todoId: number): Promise<Todo> {
+  async findOneTodo(todoId: number): Promise<Todo> {
     return this.findOne({where: { todoId } });
   }
   async findProjectByProjectId(projectId: number): Promise<Project> {
