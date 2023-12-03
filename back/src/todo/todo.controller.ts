@@ -7,12 +7,12 @@ export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
   @Get()
-  findAllTodo() {
-    return new FindAllTodosResponse(this.todoService.findAllTodo());
+  async findAllTodo() {
+    return new FindAllTodosResponse(await this.todoService.findAllTodos());
   }
   @Get(':projectId')
-  findTodoByProjectId(@Param('projectId') projectId: number) {
-    return new FindTodosByProjectIdResponse(this.todoService.findTodoByProject(projectId));
+  async findTodoByProjectId(@Param('projectId') projectId: number) {
+    return new FindTodosByProjectIdResponse(await this.todoService.findTodosByProjectId(projectId));
   }
   // @Patch()
   // addOneTodo(@Body() addOneTodoRequest: AddOneTodoRequest) {
