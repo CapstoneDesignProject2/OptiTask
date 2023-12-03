@@ -2,70 +2,57 @@ import { Injectable } from '@nestjs/common';
 import { Todo } from './todo.entity';
 import { AddOneTodoRequest, DeleteOneTodoRequest, StartTodoRequest, StopTodoRequest } from './todo.dto';
 import { Project } from 'src/project/project.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TodoRepository } from './todo.repository';
 
 @Injectable()
 export class TodoService {
-  private todos: Todo[] = [];
+  constructor(
+    @InjectRepository(Todo)
+    private todoRepository: TodoRepository
+  ) {}
 
-  createTodoByProject(newProject: Project, todoList: string[]) {
-    //projectId로 바꾸고 repository로 수정
-    todoList.forEach((todoName) => {
-      this.todos.push({
-        todoId: this.todos.length + 1,
-        todoName,
-        startTime: null,
-        tempTime: null,
-        endTime: null,
-        todoTotalTime: 0,
-        success: false,
-        project: newProject,
-      });
-    });
+  async findAllTodos() : Promise<Todo[]> {
+    return await this.todoRepository.findAllTodos();
+  }
+  async findTodosByProjectId(projectId: number) : Promise<Todo[]> {
+    return await this.todoRepository.findTodosByProjectId(projectId);
+  }
+  async createTodoByProject(newProject: Project, todoList: string[]) {
+    for (const todoName of todoList) {
+      const newTodo = await this.todoRepository.createTodo();
+      newTodo.todoName = todoName;
+      newTodo.project = newProject;
+      this.todoRepository.saveTodo(newTodo);
+    }
+  }
+  async addOneTodo(addOneTodoRequest: AddOneTodoRequest) {
+    const project = await this.todoRepository.findProjectByProjectId(addOneTodoRequest.projectId);
+    const newTodo = await this.todoRepository.createTodo();
+
+    newTodo.project = project;
+    newTodo.todoName = addOneTodoRequest.todoName;
+    this.todoRepository.save(newTodo);
   }
   deleteTodoByProject(projectId: number) {
-    this.todos = this.todos.filter((todo) => todo.project.projectId !== projectId);
-  }
-  findAllTodo() : Todo[] {
-    return this.todos;
-  }
-  findTodoByProject(projectId: number) : Todo[] {
-    return this.todos.filter((todo) => todo.project.projectId === projectId);
-  }
-  addOneTodo(addOneTodoRequest: AddOneTodoRequest) {
-    //projectId로 바꾸고 repository로 수정
-    // const todoProject = this.projectService.findProjectByProjectId(addOneTodoRequest.projectId);
-    // this.todos.push({
-    //   todoId: this.todos.length + 1,
-    //     todoName: addOneTodoRequest.todoName,
-    //     startTime: null,
-    //     tempTime: null,
-    //     endTime: null,
-    //     todoTotalTime: 0,
-    //     success: false,
-    //     project: todoProject,
-    // });
+    return this.todoRepository.deleteTodoByProjectId(projectId);
   }
   deleteOneTodo(deleteOneTodoRequest: DeleteOneTodoRequest) {
-    this.todos = this.todos.filter((todo) => todo.todoId !== deleteOneTodoRequest.todoId);
+    return this.todoRepository.deleteOneTodo(deleteOneTodoRequest.todoId);
   }
-  startTodo(startTodoRequest: StartTodoRequest) {
-    this.todos = this.todos.map((todo) => {
-      if (todo.todoId === startTodoRequest.todoId) {
-        todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
-        todo.tempTime = startTodoRequest.startTime;
-        return todo;
-      }
-      return todo;
-    });
+  async startTodo(startTodoRequest: StartTodoRequest) {
+    const todo = await this.todoRepository.findOneTodo(startTodoRequest.todoId);
+
+    todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
+    todo.tempTime = startTodoRequest.startTime;
+    this.todoRepository.save(todo);
   }
-  stopTodo(stopTodoRequest: StopTodoRequest) {
-    this.todos = this.todos.map((todo) => {
-      if (todo.todoId === stopTodoRequest.todoId) {
-        todo.endTime = stopTodoRequest.stopTime;
-        todo.success = stopTodoRequest.sucess;
-        todo.todoTotalTime += todo.tempTime.getTime() - todo.endTime.getTime();
-      }
-      return todo;
-    });
+  async stopTodo(stopTodoRequest: StopTodoRequest) {
+    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.todoId);
+
+    todo.endTime = stopTodoRequest.stopTime;
+    todo.success = stopTodoRequest.sucess;
+    todo.todoTotalTime += todo.tempTime.getTime() - todo.endTime.getTime();
+    this.todoRepository.save(todo);
   }
 }
