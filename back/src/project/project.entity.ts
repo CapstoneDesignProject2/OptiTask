@@ -1,5 +1,5 @@
-import { Todo } from 'src/todo/todo.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { User } from '../user/user.entity';
 
 @Entity()
 export class Project {
@@ -11,4 +11,7 @@ export class Project {
 
     @Column()
     deadline: Date;
+
+    @ManyToOne(type => User, user => user.projects)
+    user: User;
 }
