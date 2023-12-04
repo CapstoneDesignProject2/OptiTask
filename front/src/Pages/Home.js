@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Title from '../Components/Title';
 
 
 function Home() {
@@ -78,7 +79,11 @@ function Home() {
         // ...나머지 스타일 유지
     };
 
-
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    
+    const goToLogin = () => {
+        navigate("/login");
+    }
 
     // useEffect(() => {
     //     // 사용자의 로그인 상태를 확인합니다.
