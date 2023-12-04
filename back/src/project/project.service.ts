@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Project } from './project.entity';
 import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest } from './project.dto';
 import { TodoService } from '../todo/todo.service';
+import { UsersService } from 'src/user/users.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectRepository } from './project.repository';
 
@@ -11,7 +12,8 @@ export class ProjectService {
     @InjectRepository(Project)
     private projectRepository: ProjectRepository,
     
-    private readonly todoService: TodoService) {}
+    private readonly todoService: TodoService,
+    private readonly usersService: UsersService) {}
 
   async findAllProject(userId: number): Promise<Project[]> {
     return await this.projectRepository.findAllProject(userId);
@@ -20,9 +22,10 @@ export class ProjectService {
     return await this.projectRepository.findOneProject(userId, projectId);
   }
   async createProject(createProjectRequest: CreateProjectRequest){
-    const newProject = await this.projectRepository.createProject(CreateProjectRequest.userId);
+    const newProject = await this.projectRepository.createProject(createProjectRequest.userId);
     newProject.projectName = createProjectRequest.projectName;
     newProject.deadline = createProjectRequest.deadline;
+    newProject.user = await this.usersService.findOneByUserId(createProjectRequest.userId);
     this.projectRepository.saveProject(newProject);
 
     this.todoService.createTodoByProject(newProject, createProjectRequest.todoList);

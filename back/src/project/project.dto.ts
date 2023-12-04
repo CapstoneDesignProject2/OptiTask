@@ -1,6 +1,7 @@
 import { IsArray, IsDate, IsInt, IsNotEmpty, IsOptional, IsString, ValidateNested } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { Project } from './project.entity';
+import { User } from 'src/user/user.entity';
 
 export class CreateProjectRequest {
   @IsInt()
@@ -48,5 +49,18 @@ export class FindAllProjectResponse{
 
   constructor(projects: Project[]) {
     this.AllProjects = projects
+  }
+}
+export class FindOneProjectResponse{
+  projectId: number;
+  projectName: string;
+  deadline: Date;
+  user: User;
+
+  constructor(project: Project) {
+    this.projectId = project.projectId;
+    this.projectName = project.projectName;
+    this.deadline = project.deadline;
+    this.user = project.user;
   }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ProjectService } from './project.service';
-import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse } from './project.dto';
+import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse } from './project.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('project')
