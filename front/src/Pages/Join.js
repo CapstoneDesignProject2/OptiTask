@@ -16,7 +16,7 @@ function Join() {
 
     const handleSignUp = async (id, pw) => {
         try{
-            const response = await axios.post("/users/signup", {id, pw});
+            const response = await axios.post("http://backend:3000/users/signup", {id, pw});
             if (response.data.success){
                 goToLogin(); // 회원가입했으니 로그인하러 가기
             }
@@ -25,6 +25,8 @@ function Join() {
             }
         } catch(error) {
             console.error("Signup error", error);
+            console.log(pw);
+            console.log(id);
             alert("Signup error");
         }
     };
