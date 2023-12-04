@@ -1,54 +1,133 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Title from '../Components/Title';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function Home() {
     const navigate = useNavigate();
-    //이거는 서버에서 받아서 프로젝트 컨테이너들 썸네일 데이터 넣을것들 + 해당 프로젝트 페이지로 넘어갈 용도
     const [projects, setProjects] = useState([]);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const { userID, id } = location.state || {};
-    
-    const goToLogin = () => {
-        navigate("/login");
-    }
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const projectsPerPage = 3;
 
-    const goToLogout = () => {
+    const styles = {
+        container: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'space-around', // 요소들 사이의 공간을 균등하게 분배
+            height: '100vh',
+            color: 'black',
+            backgroundColor: 'white',
+            padding: '20px',
+            maxWidth: '1200px', // 컨테이너 최대 너비 설정
+            margin: '0 auto', // 가운데 정렬
+        },
+        projectContainer: {
+            display: 'flex',
+            justifyContent: 'space-around', // 프로젝트 사이의 공간을 균등하게 분배
+            width: '100%', // 전체 너비 사용
+            flexWrap: 'wrap', // 요소가 너무 많으면 다음 줄로 넘어감
+        },
+        projectCard: {
+            cursor: 'pointer',
+            border: '1px solid black',
+            padding: '20px', // 패딩 증가
+            backgroundColor: 'salmon',
+            color: 'white',
+            width: '30%', // 프로젝트 카드 너비 증가
+            margin: '10px', // 마진으로 카드 사이 간격 추가
+            boxSizing: 'border-box', // 너비와 패딩을 포함한 총 너비 유지
+            minHeight: '150px', // 프로젝트 카드 최소 높이 설정
+        },
+        button: {
+            cursor: 'pointer',
+            padding: '15px 30px', // 버튼 패딩 증가
+            margin: '10px',
+            border: 'none',
+            backgroundColor: 'black',
+            color: 'white',
+            fontSize: '18px', // 글씨 크기 증가
+            borderRadius: '5px', // 버튼의 모서리 둥글게
+        },
 
-    }
+        create_button: {
+            cursor: 'pointer',
+            padding: '15px 30px', // 버튼 패딩 증가
+            margin: '10px',
+            border: 'none',
+            backgroundColor: 'black',
+            color: 'white',
+            fontSize: '18px', // 글씨 크기 증가
+            borderRadius: '5px', // 버튼의 모서리 둥글게
+            marginTop: '-180px'
+        },
+
+        header: {
+            color: '#333', // 글자색 설정
+            fontSize: '70px', // 글자 크기 설정
+            textAlign: 'center', // 글자를 가운데 정렬
+            margin: '0', // 위아래 여백 제거
+            padding: '20px 0', // 위아래 패딩 추가
+            marginTop: '-80px'
+        },
 
 
-    // 서버에서 프로젝트 데이터를 가져오는 함수
-    useEffect(() => {
-        // 서버로부터 프로젝트 데이터를 가져오는 로직을 여기에 구현합니다.
-        // 예시: fetch("/api/projects").then(...).then(data => setProjects(data));
-    }, []);
 
-    // 프로젝트 컨테이너를 클릭했을 때 실행되는 함수
+
+
+
+        // ...나머지 스타일 유지
+    };
+
+
+
+    // useEffect(() => {
+    //     // 사용자의 로그인 상태를 확인합니다.
+    //     const token = localStorage.getItem('userToken');
+    //     if (!token) {
+    //         // 토큰이 없으면 로그인 페이지로 리디렉션합니다.
+    //         navigate('/login');
+    //     }
+
+    //     // 서버로부터 프로젝트 데이터를 가져오는 로직
+    //     // 데이터를 최신순으로 정렬
+    // }, [navigate]);
+
     const handleProjectClick = (projectId) => {
         navigate(`/project/${projectId}`);
     };
 
+    const nextProjects = () => {
+        if ((currentIndex + 1) * projectsPerPage < projects.length) {
+            setCurrentIndex(currentIndex + 1);
+        }
+    };
+
+    const prevProjects = () => {
+        if (currentIndex > 0) {
+            setCurrentIndex(currentIndex - 1);
+        }
+    };
+
+    const currentProjects = projects
+        .slice(currentIndex * projectsPerPage, (currentIndex + 1) * projectsPerPage);
+
     return (
-        <div>
-            <Title></Title>
-            { document.cookie.length ? (
-                <button onClick = {goToLogout}>Logout</button>
-            ) : (
-                <button onClick={goToLogin}>Login</button>
-            )}
-            <button onClick={() => navigate('/ProjectCreate')}>Create New Project</button>
-            <div>
-                {projects.map(project => (
-                    <div key={project.id} onClick={() => handleProjectClick(project.id)} style={{ cursor: 'pointer', border: '1px solid black', padding: '10px', margin: '10px' }}>
+        <div style={styles.container}>
+            <h1 style={styles.header}>OptiTask</h1>
+            <button style={styles.create_button} onClick={() => navigate('/Projectcreate')}>Create New Project</button>
+            <div style={styles.projectContainer}>
+                {currentProjects.map(project => (
+                    <div key={project.id} onClick={() => handleProjectClick(project.id)} style={styles.projectCard}>
                         <h3>{project.name}</h3>
                         <p>Created on: {project.creationDate}</p>
-                        {/* 추가 정보 및 썸네일 이미지 등을 여기에 표시할 수 있습니다. + project.데이터 형식에 맞게 수정해야 합니다 */}
-
                     </div>
                 ))}
             </div>
-            <button onClick={() => navigate('/mypage')} style={{ cursor: 'pointer', marginTop: '20px' }}>Go to MyPage </button>
+            <div>
+                <button style={styles.button} onClick={prevProjects} disabled={currentIndex === 0}>← Previous</button>
+                <button style={styles.button} onClick={nextProjects} disabled={(currentIndex + 1) * projectsPerPage >= projects.length}>Next →</button>
+            </div>
+            <button style={styles.create_button} onClick={() => navigate('/mypage')}>Go to MyPage</button>
         </div>
     );
 }
