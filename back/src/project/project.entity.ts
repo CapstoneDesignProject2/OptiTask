@@ -11,7 +11,4 @@ export class Project {
 
     @Column()
     deadline: Date;
-
-    @OneToMany(() => Todo, todo => todo.project)
-    todos: Todo[];
 }

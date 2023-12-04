@@ -3,14 +3,14 @@ import { Report } from './report.entity';
 
 export class ReportRepository extends Repository<Report> {
 
-  async findAllReport(): Promise<Report[]> {
-    return this.find();
+  async findAllReport(userId: number): Promise<Report[]> {
+    return this.find({ where: {project: {user: {userId: {userId}}}}});
   }
-  async findWeeklyReportsByProjectId(projectId: number): Promise<Report[]> {
-    return this.find({ where: { project: {projectId} } });
+  async findWeeklyReportsByProjectId(userId: number, projectId: number): Promise<Report[]> {
+    return this.find({ where: { project: {projectId: projectId, user: {userId: userId}} } });
   }
-  async findWeeklyReport(reportId: number): Promise<Report> {
-    return this.findOne({ where: { reportId } });
+  async findWeeklyReport(userId: number, reportId: number): Promise<Report> {
+    return this.findOne({ where: { reportId: reportId, project: {user: {userId: userId}} } });
   }
   async createReport(): Promise<Report> {
     const newReport = new Report();

@@ -3,6 +3,9 @@ import { Transform, Type } from 'class-transformer';
 import { Project } from './project.entity';
 
 export class CreateProjectRequest {
+  @IsInt()
+  readonly userId: number;
+  
   @IsString()
   readonly projectName: string;
 
@@ -17,6 +20,9 @@ export class CreateProjectRequest {
   readonly deadline: Date;
 }
 export class UpdateProjectRequest {
+  @IsInt()
+  readonly userId: number;
+
   @IsInt()
   readonly projectId: number;
 
