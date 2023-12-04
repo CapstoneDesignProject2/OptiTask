@@ -22,6 +22,8 @@ export class UsersController {
   @Post('modify')
   @UseGuards(AuthGuard('jwt'))
   async modify(@Body() modifyUserDTO: ModifyUserDTO): Promise<User> {
-    return this.usersService.modify(modifyUserDTO);
+    const modifiedUser = await this.usersService.modify(modifyUserDTO);
+    delete modifiedUser.password;
+    return modifiedUser;
   }
 }
