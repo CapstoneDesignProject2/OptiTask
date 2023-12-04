@@ -13,6 +13,10 @@ export class UsersService {
   ) {}
 
   async create(createUserDTO: CreateUserDTO): Promise<User> {
+    if (!createUserDTO.password) {
+      throw new Error('Password is required');
+    }
+  
     createUserDTO.password = await bcrypt.hash(createUserDTO.password, 10);
     return this.userRepository.save(createUserDTO);
   }
