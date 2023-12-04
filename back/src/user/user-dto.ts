@@ -9,3 +9,13 @@ export class CreateUserDTO {
   @Length(6, 20)
   password: string;
 }
+
+export class ModifyUserDTO {
+  @IsString()
+  @Length(4, 20)
+  readonly id: string;
+
+  @IsString()
+  @Length(6, 20)
+  newPassword: string;
+}
