@@ -4,9 +4,10 @@ import { ProjectService } from './project.service';
 import { Project } from './project.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoModule } from 'src/todo/todo.module';
+import { UserModule } from 'src/user/users.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Project]), TodoModule],
+    imports: [TypeOrmModule.forFeature([Project]), TodoModule, UserModule],
     controllers: [ProjectController],
     providers: [ProjectService]
 })

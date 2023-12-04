@@ -4,13 +4,23 @@ import { Report } from './report.entity';
 export class ReportRepository extends Repository<Report> {
 
   async findAllReport(userId: number): Promise<Report[]> {
-    return this.find({ where: {project: {user: {userId: {userId}}}}});
+    return this.createQueryBuilder("report")
+        .innerJoinAndSelect("report.project", "project")
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .getMany();
   }
   async findWeeklyReportsByProjectId(userId: number, projectId: number): Promise<Report[]> {
-    return this.find({ where: { project: {projectId: projectId, user: {userId: userId}} } });
+    return this.createQueryBuilder("report")
+        .innerJoinAndSelect("report.project", "project", "project.projectId = :projectId", { projectId })
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .getMany();
   }
   async findWeeklyReport(userId: number, reportId: number): Promise<Report> {
-    return this.findOne({ where: { reportId: reportId, project: {user: {userId: userId}} } });
+    return this.createQueryBuilder("report")
+        .innerJoinAndSelect("report.project", "project")
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .where("report.reportId = :reportId", { reportId })
+        .getOne();
   }
   async createReport(): Promise<Report> {
     const newReport = new Report();

@@ -8,13 +8,23 @@ export class TodoRepository extends Repository<Todo> {
     return this.find()
   }
   async findAllTodos(userId: number): Promise<Todo[]> {
-    return this.find({ where: {project: {user: {userId: userId}}}});
+    return this.createQueryBuilder("todo")
+        .innerJoinAndSelect("todo.project", "project")
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .getMany();
   }
   async findTodosByProjectId(userId: number, projectId: number): Promise<Todo[]> {
-    return this.find({ where: {project: {projectId: projectId, user: {userId: userId}}}});
+    return this.createQueryBuilder("todo")
+        .innerJoinAndSelect("todo.project", "project", "project.projectId = :projectId", { projectId })
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .getMany();
   }
   async findOneTodo(userId: number, todoId: number): Promise<Todo> {
-    return this.findOne({where: {todoId: todoId, project: {user: {userId: userId}}} });
+    return this.createQueryBuilder("todo")
+        .innerJoinAndSelect("todo.project", "project")
+        .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
+        .where("todo.todoId = :todoId", { todoId })
+        .getOne();
   }
   async findProjectByProjectId(projectId: number): Promise<Project> {
     const todo = await this.createQueryBuilder("todo")
