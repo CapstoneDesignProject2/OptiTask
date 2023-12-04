@@ -15,6 +15,9 @@ export class DeleteOneTodoRequest{
 }
 export class StartTodoRequest {
   @IsInt()
+  readonly userId: number;
+
+  @IsInt()
   readonly todoId: number;
 
   @Transform(({ value }) => new Date(value))
@@ -22,6 +25,9 @@ export class StartTodoRequest {
   readonly startTime: Date;
 }
 export class StopTodoRequest {
+  @IsInt()
+  readonly userId: number;
+  
   @IsInt()
   readonly todoId: number;
 

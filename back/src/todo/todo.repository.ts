@@ -4,14 +4,17 @@ import { Project } from "src/project/project.entity";
 
 export class TodoRepository extends Repository<Todo> {
 
-  async findAllTodos(): Promise<Todo[]> {
-    return this.find();
+  async findAllTodosByAllUsers(): Promise<Todo[]> {
+    return this.find()
   }
-  async findTodosByProjectId(projectId: number): Promise<Todo[]> {
-    return this.find({ where: {project: {projectId}}});
+  async findAllTodos(userId: number): Promise<Todo[]> {
+    return this.find({ where: {project: {user: {userId: userId}}}});
   }
-  async findOneTodo(todoId: number): Promise<Todo> {
-    return this.findOne({where: { todoId } });
+  async findTodosByProjectId(userId: number, projectId: number): Promise<Todo[]> {
+    return this.find({ where: {project: {projectId: projectId, user: {userId: userId}}}});
+  }
+  async findOneTodo(userId: number, todoId: number): Promise<Todo> {
+    return this.findOne({where: {todoId: todoId, project: {user: {userId: userId}}} });
   }
   async findProjectByProjectId(projectId: number): Promise<Project> {
     const todo = await this.createQueryBuilder("todo")

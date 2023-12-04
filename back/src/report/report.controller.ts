@@ -1,20 +1,22 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('report')
+@UseGuards(AuthGuard('jwt'))
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Get('reportId')
-  findWeeklyReport(@Param('reportId') reportId: number) {
-    return this.reportService.findWeeklyReport(reportId);
+  @Get(':userId/:reportId')
+  findWeeklyReport(@Param('userId') useId: number, @Param('reportId') reportId: number) {
+    return this.reportService.findWeeklyReport(useId, reportId);
   }
-  @Get('projectId')
-  findWeeklyReportsByProjectId(@Param('projectId') projectId: number) {
-    return this.reportService.findWeeklyReportsByProjectId(projectId)
+  @Get(':userId/:projectId')
+  findWeeklyReportsByProjectId(@Param('userId') useId: number, @Param('projectId') projectId: number) {
+    return this.reportService.findWeeklyReportsByProjectId(useId, projectId)
   }
-  @Get('/trend/:projectId')
-  findReportTrend(@Param('projectId') projectId: number) {
-    return this.reportService.findReportTrend(projectId);
+  @Get(':userId/trend/:projectId')
+  findReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
+    return this.reportService.findReportTrend(useId, projectId);
   }
 }

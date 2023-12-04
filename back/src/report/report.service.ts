@@ -5,6 +5,8 @@ import { Cron } from '@nestjs/schedule';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportRepository } from './report.repository';
+import { DataSource } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ReportService {
@@ -15,19 +17,19 @@ export class ReportService {
     private readonly todoService: TodoService
   ) {}
 
-  async findAllReport(): Promise<Report[]> {
-    return await this.reportRepository.findAllReport();
+  async findAllReport(userId: number): Promise<Report[]> {
+    return await this.reportRepository.findAllReport(userId);
   }
-  async findWeeklyReport(reportId: number): Promise<Report> {
-    const report = await this.reportRepository.findWeeklyReport(reportId);
+  async findWeeklyReport(userId: number, reportId: number): Promise<Report> {
+    const report = await this.reportRepository.findWeeklyReport(userId, reportId);
     return report;
   }
-  async findWeeklyReportsByProjectId(projectId: number): Promise<Report[]> {
-    return await this.reportRepository.findWeeklyReportsByProjectId(projectId);
+  async findWeeklyReportsByProjectId(userId: number, projectId: number): Promise<Report[]> {
+    return await this.reportRepository.findWeeklyReportsByProjectId(userId, projectId);
   }
-  async findReportTrend(projectId: number): Promise<ReportTrend> {
+  async findReportTrend(userId: number, projectId: number): Promise<ReportTrend> {
     const reportTrend = new ReportTrend();
-    const weeklyReportsByProjectId = await this.findWeeklyReportsByProjectId(projectId);
+    const weeklyReportsByProjectId = await this.findWeeklyReportsByProjectId(userId, projectId);
     let totalTime = 0;
     let totalSuccessTodo = 0;
     reportTrend.totalTimeTrend = [];
@@ -42,8 +44,8 @@ export class ReportService {
     return reportTrend;
   }
   @Cron('0 0 * * 1')
-  async createWeeklyReport() {
-    const todos = await this.todoService.findAllTodos();
+  async createWeeklyReport(userId: number) {
+    const todos = await this.todoService.findAllTodosByAllUsers();
     const projectStats = {};
 
     for (const todo of todos) {
@@ -60,7 +62,7 @@ export class ReportService {
 
       for (const key of Object.keys(projectStats)) {
         const projectId = Number(key);
-        const pastReports = await this.findWeeklyReportsByProjectId(projectId);
+        const pastReports = await this.findWeeklyReportsByProjectId(userId, projectId);
         const week = pastReports.length > 0 ? pastReports[pastReports.length - 1].reportWeek + 1 : 1;
         let pastTotalTime = 0;
         

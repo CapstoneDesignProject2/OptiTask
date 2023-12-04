@@ -13,11 +13,14 @@ export class ProjectService {
     
     private readonly todoService: TodoService) {}
 
-  async findAllProject(): Promise<Project[]> {
-    return await this.projectRepository.findAllProject();
+  async findAllProject(userId: number): Promise<Project[]> {
+    return await this.projectRepository.findAllProject(userId);
+  }
+  async findOneProject(userId: number, projectId): Promise<Project> {
+    return await this.projectRepository.findOneProject(userId, projectId);
   }
   async createProject(createProjectRequest: CreateProjectRequest){
-    const newProject = await this.projectRepository.createProject();
+    const newProject = await this.projectRepository.createProject(CreateProjectRequest.userId);
     newProject.projectName = createProjectRequest.projectName;
     newProject.deadline = createProjectRequest.deadline;
     this.projectRepository.saveProject(newProject);
@@ -25,7 +28,7 @@ export class ProjectService {
     this.todoService.createTodoByProject(newProject, createProjectRequest.todoList);
   }
   async updateProject(updateProjectRequest: UpdateProjectRequest) {
-    const updateProject = await this.projectRepository.findOneProject(updateProjectRequest.projectId);
+    const updateProject = await this.projectRepository.findOneProject(updateProjectRequest.userId, updateProjectRequest.projectId);
     updateProject.projectName = updateProjectRequest.projectName;
     updateProject.deadline = updateProjectRequest.deadline;
     

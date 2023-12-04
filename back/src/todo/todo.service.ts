@@ -12,11 +12,14 @@ export class TodoService {
     private todoRepository: TodoRepository
   ) {}
 
-  async findAllTodos() : Promise<Todo[]> {
-    return await this.todoRepository.findAllTodos();
+  async findAllTodosByAllUsers() : Promise<Todo[]> {
+    return await this.todoRepository.findAllTodosByAllUsers();
   }
-  async findTodosByProjectId(projectId: number) : Promise<Todo[]> {
-    return await this.todoRepository.findTodosByProjectId(projectId);
+  async findAllTodos(userId: number) : Promise<Todo[]> {
+    return await this.todoRepository.findAllTodos(userId);
+  }
+  async findTodosByProjectId(userId: number, projectId: number) : Promise<Todo[]> {
+    return await this.todoRepository.findTodosByProjectId(userId, projectId);
   }
   async createTodoByProject(newProject: Project, todoList: string[]) {
     for (const todoName of todoList) {
@@ -41,14 +44,14 @@ export class TodoService {
     return this.todoRepository.deleteOneTodo(deleteOneTodoRequest.todoId);
   }
   async startTodo(startTodoRequest: StartTodoRequest) {
-    const todo = await this.todoRepository.findOneTodo(startTodoRequest.todoId);
+    const todo = await this.todoRepository.findOneTodo(startTodoRequest.userId, startTodoRequest.todoId);
 
     todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
     todo.tempTime = startTodoRequest.startTime;
     this.todoRepository.save(todo);
   }
   async stopTodo(stopTodoRequest: StopTodoRequest) {
-    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.todoId);
+    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.userId, stopTodoRequest.todoId);
 
     todo.endTime = stopTodoRequest.stopTime;
     todo.success = stopTodoRequest.sucess;
