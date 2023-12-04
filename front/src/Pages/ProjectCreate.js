@@ -8,6 +8,42 @@ function ProjectCreate() {
     const [todos, setTodos] = useState([]);
     const [todoInput, setTodoInput] = useState('');
 
+    const styles = {
+
+
+        container: {
+
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center', // 중앙 정렬
+            justifyContent: 'center', // 수직으로 중앙 정렬
+            minHeight: '90vh', // 전체 화면 높이
+        },
+        input: {
+            margin: '10px 0', // 상하 마진
+            padding: '10px', // 패딩
+            width: '60%', // 너비
+            fontSize: '1.2em', // 글자 크기
+        },
+        button: {
+            margin: '10px 0', // 상하 마진
+            padding: '10px 20px', // 패딩
+            fontSize: '1.2em', // 글자 크기
+        },
+        todoList: {
+            listStyle: 'none', // 리스트 스타일 제거
+        },
+        todoItem: {
+            padding: '5px', // 패딩
+            fontSize: '1.2em', // 글자 크기
+        },
+        todoListContainer: {
+            maxHeight: '200px', // 할 일 목록의 최대 높이 설정
+            overflowY: 'auto', // 세로 스크롤바 설정
+            margin: '20px 0', // 상하 마진
+        },
+    };
+
     const handleProjectNameChange = (event) => {
         setProjectName(event.target.value);
     };
@@ -60,24 +96,29 @@ function ProjectCreate() {
             });
     };
     return (
-        <div>
-            <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer', fontSize: 50, textAlign: 'center', marginBottom: '40px' }}>Project Creator</h1>
 
-            <input type="text" name="projectName" placeholder="Project Name" value={projectName} onChange={handleProjectNameChange} />
-            <br />
-            <input type="date" name="deadline" value={deadline} onChange={handleDeadlineChange} />
-            <br />
-            <input type="text" name="todoInput" placeholder="Add ToDo" value={todoInput} onChange={handleTodoInputChange} />
-            <button onClick={handleAddTodo}>Add</button>
+        <div style={styles.container}>
+            <h1 onClick={() => navigate("/")} style={{ cursor: 'pointer', fontSize: '50px', textAlign: 'center', marginBottom: '40px' }}>Project Creator</h1>
 
-            <ul>
-                {todos.map((todo) => (
-                    <li key={todo.id}>{todo.text}</li>
-                ))}
-            </ul>
+            <input type="text" name="projectName" placeholder="Project Name" value={projectName} onChange={handleProjectNameChange} style={styles.input} />
+            <label htmlFor="deadline">Deadline</label>
+            <input type="date" name="deadline" value={deadline} onChange={handleDeadlineChange} style={styles.input} />
+            <div>
+                <input type="text" name="todoInput" placeholder="Add ToDo" value={todoInput} onChange={handleTodoInputChange} style={styles.input} />
+                <button onClick={handleAddTodo} style={styles.button}>Add</button>
+            </div>
 
-            <button onClick={handleSubmit}>Complete Project Creation</button>
+            <div style={styles.todoListContainer}>
+                <ul style={styles.todoList}>
+                    {todos.map((todo) => (
+                        <li key={todo.id} style={styles.todoItem}>{todo.text}</li>
+                    ))}
+                </ul>
+            </div>
+
+            <button onClick={handleSubmit} style={styles.button}>Complete</button>
         </div>
+
     );
 }
 
