@@ -17,14 +17,14 @@ function Login({ }) {
         navigate("/join");
     }
 
-    const handleSignIn = async (id, pw) => {
-        try {
-            const response = await axios.post("/auth/login", { id, pw });
+    const handleSignIn = async () => {
+        try{
+            const response = await axios.post("/auth/login", {username : id, pw});
             const data = response.data;
 
             if (data.access_token) {
-                document.cookie = `session_id=${data.access_token}`;
-                goToHome(); // 성공 시 홈 페이지로 이동
+                localStorage.setItem("access_token", data.access_token); // JWT 토큰을 로컬 스토리지에 저장
+                goToHome();
             } else {
                 // 로그인 실패 처리
                 alert("Login failed");
@@ -42,8 +42,8 @@ function Login({ }) {
             <br />
             <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={{ width: '400px', height: '50px', fontSize: '20px', marginBottom: '15px' }} />
             <br />
-            <Button type="submit" text="Sign In" style={{ width: '150px', height: '50px', fontSize: '20px', marginBottom: '15px' }}></Button>
-            <Button type="submit" text="Create Account" onClick={goToJoin} style={{ width: '150px', height: '50px', fontSize: '20px', marginBottom: '15px' }}></Button>
+            <Button type="submit" text = "Sign In" onClick={handleSignIn} style={{ width: '150px', height: '50px', fontSize: '20px', marginBottom: '15px' }}></Button>
+            <Button type="submit" text = "Create Account" onClick={goToJoin} style={{ width: '150px', height: '50px', fontSize: '20px', marginBottom: '15px' }}></Button>
         </div>
 
     );
