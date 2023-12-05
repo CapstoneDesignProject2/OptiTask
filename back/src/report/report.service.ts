@@ -42,41 +42,42 @@ export class ReportService {
     return reportTrend;
   }
   @Cron('0 0 * * 1')
-  async createWeeklyReport(userId: number) {
+  async createWeeklyReport() {
     const todos = await this.todoService.findAllTodosByAllUsers();
     const projectStats = {};
 
     for (const todo of todos) {
       const projectId = todo.project.projectId;
+      const userId = todo.project.user.userId;
       
       if (!projectStats[projectId]) {
-        projectStats[projectId] = {totalTime: 0, successCount: 0};
+        projectStats[projectId] = {totalTime: 0, successCount: 0, userId: userId};
       }
 
       projectStats[projectId].totalTime += todo.todoTotalTime;
       if (todo.success) {
         projectStats[projectId].successCount++;
       }
+    }
+    
+    for (const key of Object.keys(projectStats)) {
+      const projectId = Number(key);
+      const pastReports = await this.findWeeklyReportsByProjectId(projectStats[projectId].useId, projectId);
+      const week = pastReports.length > 0 ? pastReports[pastReports.length - 1].reportWeek + 1 : 1;
+      let pastTotalTime = 0;
+      
+      pastReports.forEach(pastReport => {
+        pastTotalTime += pastReport.weeklyTotalTime;
+      });
+      const weeklyTotalTime = projectStats[projectId].totalTime - pastTotalTime;
 
-      for (const key of Object.keys(projectStats)) {
-        const projectId = Number(key);
-        const pastReports = await this.findWeeklyReportsByProjectId(userId, projectId);
-        const week = pastReports.length > 0 ? pastReports[pastReports.length - 1].reportWeek + 1 : 1;
-        let pastTotalTime = 0;
-        
-        pastReports.forEach(pastReport => {
-          pastTotalTime += pastReport.weeklyTotalTime;
-        });
-        const weeklyTotalTime = projectStats[projectId].totalTime - pastTotalTime;
+      const newReport = await this.createReport();
+      newReport.project = { projectId } as any; 
+      newReport.reportWeek = week;
+      newReport.weeklyTotalTime = weeklyTotalTime;
+      newReport.successTodo = projectStats[projectId].successCount;
 
-        const newReport = await this.createReport();
-        newReport.project = { projectId } as any; 
-        newReport.reportWeek = week;
-        newReport.weeklyTotalTime = weeklyTotalTime;
-        newReport.successTodo = projectStats[projectId].successCount;
-
-        this.saveReport(newReport);
-      }
+      this.saveReport(newReport);
     }
   }
   async createReport(): Promise<Report> {

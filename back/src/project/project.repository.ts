@@ -22,7 +22,7 @@ export class ProjectRepository extends Repository<Project> {
 
     newProject.projectName = "emptyProject";
     newProject.deadline = null;
-    newProject.user = null;
+    newProject.user = { userId } as any; // work?
     
     return newProject;
   }

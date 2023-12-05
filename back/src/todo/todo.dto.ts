@@ -38,17 +38,6 @@ export class StopTodoRequest {
   @IsBoolean()
   readonly sucess: boolean;
 }
-export class FindAllTodosResponse {
-  @IsArray()
-  @IsNotEmpty()
-  @ValidateNested({ each: true })
-  @Type(() => Todo)
-  readonly allTodos: Todo[];
-
-  constructor(todos: Todo[]) {
-    this.allTodos = todos
-  }
-}
 export class FindTodosByProjectIdResponse {
   @IsArray()
   @IsNotEmpty()
