@@ -1,36 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { Todo } from './todo.entity';
-import { StartTodoRequest, PauseTodoRequest, EndTodoRequest } from './todo.dto';
+import { AddOneTodoRequest, DeleteOneTodoRequest, StartTodoRequest, StopTodoRequest } from './todo.dto';
 import { Project } from 'src/project/project.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { TodoRepository } from './todo.repository';
 
 @Injectable()
 export class TodoService {
-  private todos: Todo[] = [];
+  constructor(
+    @InjectRepository(Todo)
+    private todoRepository: TodoRepository
+  ) {}
 
-  createTodoByProject(newProject: Project, todoList: string[]) {
-    todoList.forEach((todoName) => {
-      this.todos.push({
-        todoId: this.todos.length + 1,
-        todoName,
-        startTime: null,
-        endTime: null,
-        success: false,
-        project: newProject,
-      });
-    });
+  async findAllTodosByAllUsers() : Promise<Todo[]> {
+    return await this.todoRepository.findAllTodosByAllUsers();
+  }
+  async findAllTodos(userId: number) : Promise<Todo[]> {
+    return await this.todoRepository.findAllTodos(userId);
+  }
+  async findTodosByProjectId(userId: number, projectId: number) : Promise<Todo[]> {
+    return await this.todoRepository.findTodosByProjectId(userId, projectId);
+  }
+  async createTodoByProject(newProject: Project, todoList: string[]) {
+    for (const todoName of todoList) {
+      const newTodo = await this.todoRepository.createTodo();
+      newTodo.todoName = todoName;
+      newTodo.project = newProject;
+      this.todoRepository.saveTodo(newTodo);
+    }
+  }
+  async addOneTodo(addOneTodoRequest: AddOneTodoRequest) {
+    const project = await this.todoRepository.findProjectByProjectId(addOneTodoRequest.projectId);
+    const newTodo = await this.todoRepository.createTodo();
+
+    newTodo.project = project;
+    newTodo.todoName = addOneTodoRequest.todoName;
+    this.todoRepository.save(newTodo);
   }
   deleteTodoByProject(projectId: number) {
-    this.todos = this.todos.filter((todo) => todo.project.projectId !== projectId);
+    return this.todoRepository.deleteTodoByProjectId(projectId);
   }
-  findAllTodo() : Todo[] {
-    return this.todos
+  deleteOneTodo(deleteOneTodoRequest: DeleteOneTodoRequest) {
+    return this.todoRepository.deleteOneTodo(deleteOneTodoRequest.todoId);
   }
-  findTodoByProject(projectId: number) : Todo[] {
-    return this.todos.filter((todo) => todo.project.projectId === projectId);
+  async startTodo(startTodoRequest: StartTodoRequest) {
+    const todo = await this.todoRepository.findOneTodo(startTodoRequest.userId, startTodoRequest.todoId);
+
+    todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
+    todo.tempTime = startTodoRequest.startTime;
+    this.todoRepository.save(todo);
   }
-  // addOneTodo() {}
-  // deleteOneTodo() {}
-  // startTodo() {}
-  // pauseTodo() {}
-  // endTodo() {}
+  async stopTodo(stopTodoRequest: StopTodoRequest) {
+    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.userId, stopTodoRequest.todoId);
+
+    todo.endTime = stopTodoRequest.stopTime;
+    todo.success = stopTodoRequest.sucess;
+    todo.todoTotalTime += todo.tempTime.getTime() - todo.endTime.getTime();
+    this.todoRepository.save(todo);
+  }
 }

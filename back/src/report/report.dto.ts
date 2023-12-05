@@ -1,5 +1,7 @@
-// export class ReportTrend {
-//   totalTimeTrend: number[];
-//   successTodoTrend: number[];
-//   totalSucessTodo: number;
-// }
+export class ReportTrend {
+  reportWeeks: number[];
+  totalTimeTrend: number[];
+  successTodoTrend: number[];
+  totalTime: number;
+  totalSucessTodo: number;
+}
