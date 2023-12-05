@@ -25,7 +25,7 @@ export class ProjectService {
     const newProject = await this.projectRepository.createProject(createProjectRequest.userId);
     newProject.projectName = createProjectRequest.projectName;
     newProject.deadline = createProjectRequest.deadline;
-    newProject.user = await this.usersService.findOneByUserId(createProjectRequest.userId);
+    //newProject.user = await this.usersService.findOneByUserId(createProjectRequest.userId);
     this.projectRepository.saveProject(newProject);
 
     this.todoService.createTodoByProject(newProject, createProjectRequest.todoList);

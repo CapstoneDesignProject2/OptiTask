@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -18,5 +18,9 @@ export class ReportController {
   @Get(':userId/trend/:projectId')
   findReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
     return this.reportService.findReportTrend(useId, projectId);
+  }
+  @Post()
+  createWeeklyReports() {
+    this.reportService.createWeeklyReport();
   }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { AddOneTodoRequest, DeleteOneTodoRequest, FindAllTodosResponse, FindTodosByProjectIdResponse, StartTodoRequest, StopTodoRequest } from './todo.dto';
+import { AddOneTodoRequest, DeleteOneTodoRequest, FindTodosByProjectIdResponse, StartTodoRequest, StopTodoRequest } from './todo.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('todo')
@@ -8,10 +8,6 @@ import { AuthGuard } from '@nestjs/passport';
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
-  @Get(':userId')
-  async findAllTodo(@Param('userId') useId: number) {
-    return new FindAllTodosResponse(await this.todoService.findAllTodos(useId));
-  }
   @Get(':userId/:projectId')
   async findTodoByProjectId(@Param('userId') useId: number, @Param('projectId') projectId: number) {
     return new FindTodosByProjectIdResponse(await this.todoService.findTodosByProjectId(useId, projectId));
