@@ -2,37 +2,43 @@ import { Injectable } from '@nestjs/common';
 import { Project } from './project.entity';
 import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest } from './project.dto';
 import { TodoService } from '../todo/todo.service';
+import { UsersService } from 'src/user/users.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { ProjectRepository } from './project.repository';
 
 @Injectable()
 export class ProjectService {
-  private projects: Project[] = [];
-  constructor(private readonly todoService: TodoService) {}
+  constructor(
+    @InjectRepository(Project)
+    private projectRepository: ProjectRepository,
+    
+    private readonly todoService: TodoService,
+    private readonly usersService: UsersService) {}
 
-  findAllProject() : Project[] {
-    return this.projects
+  async findAllProject(userId: number): Promise<Project[]> {
+    return await this.projectRepository.findAllProject(userId);
   }
-  createProject(createProjectRequest: CreateProjectRequest){
-    let newProject = new Project();
-    newProject.projectId = this.projects.length;
+  async findOneProject(userId: number, projectId): Promise<Project> {
+    return await this.projectRepository.findOneProject(userId, projectId);
+  }
+  async createProject(createProjectRequest: CreateProjectRequest){
+    const newProject = await this.projectRepository.createProject(createProjectRequest.userId);
     newProject.projectName = createProjectRequest.projectName;
     newProject.deadline = createProjectRequest.deadline;
-    this.projects.push(newProject);
+    //newProject.user = await this.usersService.findOneByUserId(createProjectRequest.userId);
+    this.projectRepository.saveProject(newProject);
+
     this.todoService.createTodoByProject(newProject, createProjectRequest.todoList);
   }
-  updateProject(updateProjectRequest: UpdateProjectRequest) {
-    let updateProject = new Project();
-    updateProject.projectId = updateProjectRequest.projectId;
+  async updateProject(updateProjectRequest: UpdateProjectRequest) {
+    const updateProject = await this.projectRepository.findOneProject(updateProjectRequest.userId, updateProjectRequest.projectId);
     updateProject.projectName = updateProjectRequest.projectName;
     updateProject.deadline = updateProjectRequest.deadline;
-    this.projects = this.projects.map((project) => {
-      if (project.projectId === updateProjectRequest.projectId) {
-        return updateProject;
-      }
-      return project;
-    });
+    
+    this.projectRepository.saveProject(updateProject);
   }
   deleteProject(deleteProejctRequest: DeleteProejctRequest) {
-    this.projects = this.projects.filter((project) => project.projectId !== deleteProejctRequest.projectId);
+    this.projectRepository.deleteOneProject(deleteProejctRequest.projectId);
     this.todoService.deleteTodoByProject(deleteProejctRequest.projectId);
   }
 }
