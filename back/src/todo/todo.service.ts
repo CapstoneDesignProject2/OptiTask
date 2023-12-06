@@ -44,14 +44,14 @@ export class TodoService {
     return this.todoRepository.deleteOneTodo(deleteOneTodoRequest.todoId);
   }
   async startTodo(startTodoRequest: StartTodoRequest) {
-    const todo = await this.todoRepository.findOneTodo(startTodoRequest.userId, startTodoRequest.todoId);
+    const todo = await this.todoRepository.findOneTodo(startTodoRequest.userId, startTodoRequest.projectId ,startTodoRequest.todoId);
 
     todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
     todo.tempTime = startTodoRequest.startTime;
     this.todoRepository.save(todo);
   }
   async stopTodo(stopTodoRequest: StopTodoRequest) {
-    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.userId, stopTodoRequest.todoId);
+    const todo = await this.todoRepository.findOneTodo(stopTodoRequest.userId, stopTodoRequest.projectId, stopTodoRequest.todoId);
 
     todo.endTime = stopTodoRequest.stopTime;
     todo.success = stopTodoRequest.sucess;
