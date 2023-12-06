@@ -18,6 +18,9 @@ export class StartTodoRequest {
   readonly userId: number;
 
   @IsInt()
+  readonly projectId: number;
+
+  @IsInt()
   readonly todoId: number;
 
   @Transform(({ value }) => new Date(value))
@@ -27,6 +30,9 @@ export class StartTodoRequest {
 export class StopTodoRequest {
   @IsInt()
   readonly userId: number;
+
+  @IsInt()
+  readonly projectId: number;
   
   @IsInt()
   readonly todoId: number;
