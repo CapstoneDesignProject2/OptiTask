@@ -6,20 +6,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportRepository } from './report.repository';
 import { OpenAI } from "openai";
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class ReportService {
   private openai: OpenAI;
+  //private configService: ConfigService;
 
   constructor(
     @InjectRepository(Report)
-    private reportRepository: ReportRepository,
+    private readonly reportRepository: ReportRepository,
   
-    private readonly todoService: TodoService
+    private readonly todoService: TodoService,
+    private readonly configService: ConfigService
   ) {
     this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-      organization: process.env.OPENAI_ORG_ID,
+      apiKey : this.configService.get<string>('OPENAI_API_KEY'),
+      organization: this.configService.get<string>('OPENAI_ORG_ID')
     });
   }
 
