@@ -5,15 +5,23 @@ import { Cron } from '@nestjs/schedule';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ReportRepository } from './report.repository';
+import { OpenAI } from "openai";
 
 @Injectable()
 export class ReportService {
+  private openai: OpenAI;
+
   constructor(
     @InjectRepository(Report)
     private reportRepository: ReportRepository,
   
     private readonly todoService: TodoService
-  ) {}
+  ) {
+    this.openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+      organization: process.env.OPENAI_ORG_ID,
+    });
+  }
 
   async findAllReport(userId: number): Promise<Report[]> {
     return await this.reportRepository.findAllReport(userId);
@@ -40,6 +48,22 @@ export class ReportService {
       totalSuccessTodo += weeklyReport.successTodo;
     });
     return reportTrend;
+  }
+  async findAdviceForReportTrend(/*userId: number, projectId: number*/ reportTrend: ReportTrend) {
+    //const reportTrend = await this.findReportTrend(userId, projectId);
+    let prompt = "";
+
+    for(let i = 0; i < reportTrend.reportWeeks.length; i++) {
+      prompt += `${reportTrend.reportWeeks[i]}주차: ${reportTrend.totalTimeTrend[i]}시간 수행, todo ${reportTrend.successTodoTrend[i]}개 완료, `;
+    }
+    prompt += `총 ${reportTrend.totalTime}시간 수행, todo ${reportTrend.totalSucessTodo}개 완료`;
+    prompt += "앞으로는 어떻게 할까요?";
+    
+    const gptResponse = await this.openai.chat.completions.create({
+      messages: [{ role: 'user', content: prompt }],
+      model: 'gpt-3.5-turbo',
+    });
+    return gptResponse.choices[0].message.content;
   }
   @Cron('0 0 * * 1')
   async createWeeklyReport() {
