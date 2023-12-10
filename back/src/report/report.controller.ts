@@ -1,10 +1,9 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { AuthGuard } from '@nestjs/passport';
-import { AdviceRequest, ReportTrend } from './report.dto';
 
 @Controller('report')
-//@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'))
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
@@ -20,13 +19,9 @@ export class ReportController {
   findReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
     return this.reportService.findReportTrend(useId, projectId);
   }
-  // @Get(':userId/trend/:projectId')
-  // findAdviceForReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
-  //   return this.reportService.findAdviceForReportTrend(useId, projectId);
-  // }
-  @Post(':report-trend')
-  findAdviceForReportTrend(@Body() adviceRequest: AdviceRequest){
-    return this.reportService.findAdviceForReportTrend(adviceRequest);
+  @Get(':userId/trend/:projectId/advice')
+  findAdviceForReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
+    return this.reportService.findAdviceForReportTrend(useId, projectId);
   }
   @Post()
   createWeeklyReports() {
