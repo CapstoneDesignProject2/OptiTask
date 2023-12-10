@@ -20,12 +20,12 @@ function Login({ }) {
 
     const handleSignIn = async () => {
         try{
-            const response = await axios.post("/auth/login", {username : id, pw});
+            const response = await axios.post("http://backend:3000/auth/login", {username : id, pw});
             const data = response.data;
 
             if (data.access_token) {
                 localStorage.setItem("access_token", data.access_token); // JWT 토큰을 로컬 스토리지에 저장
-                console.log(localstorage.getItem(userid));
+                console.log(localStorage.getItem(id));
                 goToHome();
             } else {
                 // 로그인 실패 처리
