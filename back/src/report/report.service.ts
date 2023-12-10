@@ -11,7 +11,6 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class ReportService {
   private openai: OpenAI;
-  //private configService: ConfigService;
 
   constructor(
     @InjectRepository(Report)
@@ -52,18 +51,19 @@ export class ReportService {
     });
     return reportTrend;
   }
-  async findAdviceForReportTrend(/*userId: number, projectId: number*/ reportTrend: ReportTrend) {
-    //const reportTrend = await this.findReportTrend(userId, projectId);
+  async findAdviceForReportTrend(userId: number, projectId: number) {
+    const reportTrend = await this.findReportTrend(userId, projectId);
     let prompt = "";
+    const system = "user";
 
     for(let i = 0; i < reportTrend.reportWeeks.length; i++) {
       prompt += `${reportTrend.reportWeeks[i]}주차: ${reportTrend.totalTimeTrend[i]}시간 수행, todo ${reportTrend.successTodoTrend[i]}개 완료, `;
     }
     prompt += `총 ${reportTrend.totalTime}시간 수행, todo ${reportTrend.totalSucessTodo}개 완료`;
-    prompt += "앞으로는 어떻게 할까요?";
+    prompt += "기록을 참고해서 지금까지의 프로젝트 상황을 유추하고 앞으로 개선할 점을 지적하세요";
     
     const gptResponse = await this.openai.chat.completions.create({
-      messages: [{ role: 'user', content: prompt }],
+      messages: [{ role: system, content: prompt }],
       model: 'gpt-3.5-turbo',
     });
     return gptResponse.choices[0].message.content;

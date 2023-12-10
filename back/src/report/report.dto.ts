@@ -8,25 +8,3 @@ export class ReportTrend {
   totalTime: number;
   totalSucessTodo: number;
 }
-export class AdviceRequest {
-  @IsArray()
-  @IsNumber({}, { each: true })
-  @Type(() => Number)
-  reportWeeks: number[];
-
-  @IsArray()
-  @IsNumber({}, { each: true })
-  @Type(() => Number)
-  totalTimeTrend: number[];
-
-  @IsArray()
-  @IsNumber({}, { each: true })
-  @Type(() => Number)
-  successTodoTrend: number[];
-
-  @IsNumber()
-  totalTime: number;
-
-  @IsNumber()
-  totalSucessTodo: number;
-}
