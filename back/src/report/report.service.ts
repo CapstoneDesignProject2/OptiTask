@@ -53,17 +53,26 @@ export class ReportService {
   }
   async findAdviceForReportTrend(userId: number, projectId: number) {
     const reportTrend = await this.findReportTrend(userId, projectId);
-    let prompt = "";
+    const system_prompt = " 주어진 기록을 참고해서 지금까지의 프로젝트 상황을 유추하고 앞으로 개선할 점을 지적하세요";
+    let user_prompt = "";
     const system = "user";
 
     for(let i = 0; i < reportTrend.reportWeeks.length; i++) {
-      prompt += `${reportTrend.reportWeeks[i]}주차: ${reportTrend.totalTimeTrend[i]}시간 수행, todo ${reportTrend.successTodoTrend[i]}개 완료, `;
+      user_prompt += `${reportTrend.reportWeeks[i]}주차: ${reportTrend.totalTimeTrend[i]}분 수행, todo ${reportTrend.successTodoTrend[i]}개 완료, `;
     }
-    prompt += `총 ${reportTrend.totalTime}시간 수행, todo ${reportTrend.totalSucessTodo}개 완료`;
-    prompt += "기록을 참고해서 지금까지의 프로젝트 상황을 유추하고 앞으로 개선할 점을 지적하세요";
+    user_prompt += `총 ${reportTrend.totalTime}분 수행, todo ${reportTrend.totalSucessTodo}개 완료`;
     
     const gptResponse = await this.openai.chat.completions.create({
-      messages: [{ role: system, content: prompt }],
+      messages: [
+        {
+          role: "system",
+          content: system_prompt
+        },
+        {
+          role: "user",
+          content: user_prompt
+        }
+      ],
       model: 'gpt-3.5-turbo',
     });
     return gptResponse.choices[0].message.content;
