@@ -1,37 +1,31 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { TodoService } from './todo.service';
-import { StartTodoRequest, PauseTodoRequest, EndTodoRequest } from './todo.dto';
+import { AddOneTodoRequest, DeleteOneTodoRequest, FindTodosByProjectIdResponse, StartTodoRequest, StopTodoRequest } from './todo.dto';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('todo')
+@UseGuards(AuthGuard('jwt'))
 export class TodoController {
   constructor(private readonly todoService: TodoService) {}
 
-  @Get()
-  findAllTodo() {
-    return this.todoService.findAllTodo();
+  @Get(':userId/:projectId')
+  async findTodoByProjectId(@Param('userId') useId: number, @Param('projectId') projectId: number) {
+    return new FindTodosByProjectIdResponse(await this.todoService.findTodosByProjectId(useId, projectId));
   }
-  @Get(':projectId')
-  findTodoByProject(@Param('projectId') projectId: number) {
-    return this.todoService.findTodoByProject(projectId);
+  @Patch()
+  updateOneTodo(@Body() addOneTodoRequest: AddOneTodoRequest) {
+    return this.todoService.addOneTodo(addOneTodoRequest);
   }
-  // @Post()
-  // addOneTodo() {
-  //   return this.todoService.addOneTodo();
-  // }
-  // @Delete()
-  // deleteOneTodo() {
-  //   return this.todoService.deleteOneTodo();
-  // }
-  // @Post('start')
-  // startTodo(@Body() startTodoRequest: StartTodoRequest) {
-  //   return this.todoService.startTodo(startTodoRequest);
-  // }
-  // @Post('pause')
-  // pauseTodo(pauseTodoRequest: PauseTodoRequest) {
-  //   return this.todoService.pauseTodo(pauseTodoRequest);
-  // }
-  // @Post('end')
-  // endTodo(endTodoRequest: EndTodoRequest) {
-  //   return this.todoService.endTodo(endTodoRequest);
-  // }
+  @Delete()
+  deleteOneTodo(@Body() deleteOneTodoRequest: DeleteOneTodoRequest) {
+    return this.todoService.deleteOneTodo(deleteOneTodoRequest);
+  }
+  @Post('start')
+  startTodo(@Body() startTodoRequest: StartTodoRequest) {
+    return this.todoService.startTodo(startTodoRequest);
+  }
+  @Post('stop')
+  pauseTodo(@Body() stopTodoRequest: StopTodoRequest) {
+    return this.todoService.stopTodo(stopTodoRequest);
+  }
 }

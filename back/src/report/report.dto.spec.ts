@@ -1,7 +1,7 @@
-// import { ReportTrend } from './report.dto';
+import { ReportTrend } from './report.dto';
 
-// describe('ReportTrend', () => {
-//   it('should be defined', () => {
-//     expect(new ReportTrend()).toBeDefined();
-//   });
-// });
+describe('ReportTrend', () => {
+  it('should be defined', () => {
+    expect(new ReportTrend()).toBeDefined();
+  });
+});
