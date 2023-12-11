@@ -19,6 +19,10 @@ export class ReportController {
   findReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
     return this.reportService.findReportTrend(useId, projectId);
   }
+  @Get(':userId/trend/:projectId/advice')
+  findAdviceForReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
+    return this.reportService.findAdviceForReportTrend(useId, projectId);
+  }
   @Post()
   createWeeklyReports() {
     this.reportService.createWeeklyReport();
