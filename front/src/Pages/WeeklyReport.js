@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
+import Title from '../Components/Title';
 
 function WeeklyReport() {
     const navigate = useNavigate();
@@ -25,7 +26,7 @@ function WeeklyReport() {
     
     return(
         <div>
-            <h1 onClick={goToHome} style={{ fontSize: 50, textAlign: 'center', marginBottom: '40px' }}>EarlyStopping</h1>
+            <Title></Title>
             {weeklyReport && (
                 <div>
                 </div>
