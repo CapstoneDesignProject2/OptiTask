@@ -55,7 +55,10 @@ export class TodoService {
 
     todo.endTime = stopTodoRequest.stopTime;
     todo.success = stopTodoRequest.sucess;
-    todo.todoTotalTime += todo.tempTime.getTime() - todo.endTime.getTime();
+    todo.todoTotalTime += this.millisecondsToMinutes(todo.endTime.getTime() - todo.tempTime.getTime());
     this.todoRepository.save(todo);
+  }
+  millisecondsToMinutes(milliseconds) {
+    return milliseconds / 60000;
   }
 }
