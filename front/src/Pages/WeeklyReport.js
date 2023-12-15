@@ -1,47 +1,46 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 import Title from '../Components/Title';
 
-function WeeklyReport() {
-    const navigate = useNavigate();
-    const [weeklyReport, setWeeklyReport] = useState(null);
-    const [reportTrend, setReportTrend] = useState(null);
+const WeeklyReport = () => {
+    const { userId, projectId } = useParams();
+    const [reports, setReports] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    
-    const goToHome = () => {
-        navigate("/");
-    }
+    useEffect(() => {
+        const fetchReports = async () => {
+            try {
+                const response = await axios.get("http://backend:3000/report/${userId}/${projectId}");
+                setReports(response.data);
+                setLoading(false);
+            } catch (err) {
+                setError(err);
+                setLoading(false);
+            }
+        };
 
-    const fetchWeeklyReport = async (pastWeeksAgo) => {
-        const response = await fetch(`/report/${pastWeeksAgo}`);
-        const data = await response.json();
-        setWeeklyReport(data);
-    };
-    
-    const fetchReportTrend = async () => {
-        const response = await fetch('/report/trend');
-        const data = await response.json();
-        setReportTrend(data);
-    };
-    
-    return(
+        fetchReports();
+    }, [userId, projectId]);
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error.message}</div>;
+
+    return (
         <div>
             <Title></Title>
-            {weeklyReport && (
-                <div>
-                </div>
-            )}
-      
-            <h1>Report Trend</h1>
-            {reportTrend && (
-                <div>
-                    <p>Total Time Trend: {reportTrend.totalTimeTrend.join(', ')}</p>
-                    <p>Success ToDo Trend: {reportTrend.successToDoTrend.join(', ')}</p>
-                    <p>Total Success ToDo: {reportTrend.totalSuccessToDo}</p>
-                </div>
-            )}
+            <ul>
+                {reports.map(report => (
+                    <li key={report.reportId}>
+                        <div>주차: {report.reportWeek}</div>
+                        <div>총 작업 시간: {report.weeklyTotalTime}시간</div>
+                        <div>성공한 할 일 수: {report.successTodo}</div>
+                    </li>
+                ))}
+            </ul>
         </div>
     );
-}
+};
 
 export default WeeklyReport;
