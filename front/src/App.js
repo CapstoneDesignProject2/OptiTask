@@ -1,6 +1,5 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Forum from './Pages/Forum';
 import Home from './Pages/Home';
 import Join from './Pages/Join';
 import Login from './Pages/Login';
@@ -16,7 +15,6 @@ const App = () => {
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
       <Route path="/join" element={<Join />} />
-      <Route path="/Forum" element={<Forum />} />
       <Route path="/Mypage" element={<Mypage />} />
       <Route path="/ProjectCreate" element={<ProjectCreate />} />
       <Route path="/Project/:projectId" element={<Project />} />
