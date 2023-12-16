@@ -14,6 +14,43 @@ function Join() {
         navigate("/login");
     }
 
+    // 스타일 설정
+    const styles = {
+        container: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100vh',
+            color: 'black',
+            backgroundColor: 'white',
+            padding: '20px',
+            maxWidth: '1200px',
+            margin: '0 auto',
+        },
+        input: {
+            width: '400px',
+            height: '50px',
+            fontSize: '20px',
+            marginBottom: '15px',
+            padding: '10px',
+            border: '1px solid black',
+            borderRadius: '5px',
+        },
+        button: {
+            cursor: 'pointer',
+            padding: '15px 30px',
+            margin: '10px',
+            border: 'none',
+            backgroundColor: 'black',
+            color: 'white',
+            fontSize: '20px',
+            borderRadius: '5px',
+            width: '150px',
+            height: '50px',
+        }
+    };
+
     const handleSignUp = async (id, pw) => {
         try{
             const response = await axios.post("http://backend:3000/users/signup", {id, pw});
@@ -32,13 +69,13 @@ function Join() {
     };
 
     return(
-        <div>
+        <div style={styles.container}>
             <Title></Title>
-            <input type="text" value={id} onChange={(e) => setID(e.target.value)} placeholder="ID" style={{ width: '400px', height: '50px', fontSize: '20px', marginBottom: '15px' }} />
+            <input type="text" value={id} onChange={(e) => setID(e.target.value)} placeholder="ID" style={styles.input} />
             <br />
-            <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={{ width: '400px', height: '50px', fontSize: '20px', marginBottom: '15px' }} />
+            <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={styles.input} />
             <br />
-            <Button type="submit" text = "Join" onClick={handleSignUp} style={{ width: '150px', height: '50px', fontSize: '20px', marginBottom: '15px' }}></Button>
+            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>SignUp</button>
         </div>
     );
 }
