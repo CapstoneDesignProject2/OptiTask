@@ -61,21 +61,6 @@ function Home() {
             borderRadius: '5px', // 버튼의 모서리 둥글게
             marginTop: '-180px'
         },
-
-        header: {
-            color: '#333', // 글자색 설정
-            fontSize: '70px', // 글자 크기 설정
-            textAlign: 'center', // 글자를 가운데 정렬
-            margin: '0', // 위아래 여백 제거
-            padding: '20px 0', // 위아래 패딩 추가
-            marginTop: '-80px'
-        },
-
-
-
-
-
-
         // ...나머지 스타일 유지
     };
 
@@ -85,17 +70,17 @@ function Home() {
         navigate("/login");
     }
 
-    // useEffect(() => {
-    //     // 사용자의 로그인 상태를 확인합니다.
-    //     const token = localStorage.getItem('userToken');
-    //     if (!token) {
-    //         // 토큰이 없으면 로그인 페이지로 리디렉션합니다.
-    //         navigate('/login');
-    //     }
+    useEffect(() => {
+        // 사용자의 로그인 상태를 확인합니다.
+        const token = localStorage.getItem('userToken');
+        if (!token) {
+            // 토큰이 없으면 로그인 페이지로 리디렉션합니다.
+            navigate('/login');
+        }
 
-    //     // 서버로부터 프로젝트 데이터를 가져오는 로직
-    //     // 데이터를 최신순으로 정렬
-    // }, [navigate]);
+        // 서버로부터 프로젝트 데이터를 가져오는 로직
+        // 데이터를 최신순으로 정렬
+    }, [navigate]);
 
     const handleProjectClick = (projectId) => {
         navigate(`/project/${projectId}`);
@@ -118,7 +103,7 @@ function Home() {
 
     return (
         <div style={styles.container}>
-            <h1 style={styles.header}>OptiTask</h1>
+            <Title></Title>
             <button style={styles.create_button} onClick={() => navigate('/Projectcreate')}>Create New Project</button>
             <div style={styles.projectContainer}>
                 {currentProjects.map(project => (
