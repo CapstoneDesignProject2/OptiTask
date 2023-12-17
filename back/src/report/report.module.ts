@@ -4,10 +4,11 @@ import { ReportService } from './report.service';
 import { Report } from './report.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TodoModule } from 'src/todo/todo.module';
+import { ReportRepository } from './report.repository';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Report]), TodoModule],
     controllers: [ReportController],
-    providers: [ReportService],
+    providers: [ReportService, ReportRepository],
 })
 export class ReportModule {}

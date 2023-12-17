@@ -3,7 +3,6 @@ import { Project } from './project.entity';
 import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest } from './project.dto';
 import { TodoService } from '../todo/todo.service';
 import { UsersService } from 'src/user/users.service';
-import { InjectRepository } from '@nestjs/typeorm';
 import { ProjectRepository } from './project.repository';
 
 @Injectable()
