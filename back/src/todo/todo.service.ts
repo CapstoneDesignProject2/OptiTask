@@ -2,13 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { Todo } from './todo.entity';
 import { AddOneTodoRequest, DeleteOneTodoRequest, StartTodoRequest, StopTodoRequest } from './todo.dto';
 import { Project } from 'src/project/project.entity';
-import { InjectRepository } from '@nestjs/typeorm';
 import { TodoRepository } from './todo.repository';
 
 @Injectable()
 export class TodoService {
   constructor(
-    @InjectRepository(Todo)
     private todoRepository: TodoRepository
   ) {}
 
@@ -35,7 +33,7 @@ export class TodoService {
 
     newTodo.project = project;
     newTodo.todoName = addOneTodoRequest.todoName;
-    this.todoRepository.save(newTodo);
+    this.todoRepository.saveTodo(newTodo);
   }
   deleteTodoByProject(projectId: number) {
     return this.todoRepository.deleteTodoByProjectId(projectId);
@@ -48,7 +46,7 @@ export class TodoService {
 
     todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
     todo.tempTime = startTodoRequest.startTime;
-    this.todoRepository.save(todo);
+    this.todoRepository.saveTodo(todo);
   }
   async stopTodo(stopTodoRequest: StopTodoRequest) {
     const todo = await this.todoRepository.findOneTodo(stopTodoRequest.userId, stopTodoRequest.projectId, stopTodoRequest.todoId);
@@ -56,7 +54,7 @@ export class TodoService {
     todo.endTime = stopTodoRequest.stopTime;
     todo.success = stopTodoRequest.sucess;
     todo.todoTotalTime += this.millisecondsToMinutes(todo.endTime.getTime() - todo.tempTime.getTime());
-    this.todoRepository.save(todo);
+    this.todoRepository.saveTodo(todo);
   }
   millisecondsToMinutes(milliseconds) {
     return milliseconds / 60000;
