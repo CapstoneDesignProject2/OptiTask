@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, HttpCode, HttpStatus, HttpException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './user.entity';
 import { CreateUserDTO, ModifyUserDTO } from './user-dto';
@@ -9,10 +9,11 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post('signup')
+  @HttpCode(HttpStatus.CREATED)
   async signUp(@Body() createUserDTO: CreateUserDTO): Promise<User> {
     const checkUser = await this.usersService.findOne(createUserDTO.id);
     if (checkUser) {
-      throw new Error('User already exists');
+      throw new HttpException('User already exists', HttpStatus.CONFLICT);
     }
     const newUser = await this.usersService.create(createUserDTO);
     delete newUser.password;

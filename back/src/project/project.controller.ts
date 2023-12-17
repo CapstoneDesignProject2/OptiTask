@@ -1,29 +1,39 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Request, Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { ProjectService } from './project.service';
+import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse } from './project.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CreateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse, UpdateProjectRequest } from './project.dto';
 import { ProjectService } from './project.service';
 
 @Controller('project')
+@UseGuards(AuthGuard('jwt'))
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) { }
 
-  @Get(':userId')
-  async findAllProject(@Param('userId') userId: number) {
+  @Get('')
+  async findAllProject(@Request() req: any) {
+    const userId = req.user.userId;
     return new FindAllProjectResponse(await this.projectService.findAllProject(userId));
   }
-  @Get(':userId/:projectId')
-  async findOneProject(@Param('userId') userId: number, @Param('projectId') projectId: number) {
+  
+  @Get(':projectId')
+  async findOneProject(@Request() req: any, @Param('projectId') projectId: number) {
+    const userId = req.user.userId;
     return new FindOneProjectResponse(await this.projectService.findOneProject(userId, projectId));
   }
+  
   @Post()
-  @UseGuards(AuthGuard('jwt'))
-  createProject(@Body() createProjectRequest: CreateProjectRequest) {
+  createProject(@Request() req: any, @Body() createProjectRequest: CreateProjectRequest) {
+    createProjectRequest.userId = req.user.userId;
     return this.projectService.createProject(createProjectRequest);
   }
+  
   @Patch()
-  updateProject(@Body() updateProjectRequest: UpdateProjectRequest) {
+  updateProject(@Request() req: any, @Body() updateProjectRequest: UpdateProjectRequest) {
+    updateProjectRequest.userId = req.user.userId;
     return this.projectService.updateProject(updateProjectRequest);
   }
+  
   @Delete()
   deleteProject(@Body() deleteProjectRequest: DeleteProejctRequest) {
     return this.projectService.deleteProject(deleteProjectRequest);
