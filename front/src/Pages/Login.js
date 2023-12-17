@@ -62,11 +62,17 @@ function Login({ }) {
 
     const handleSignIn = async () => {
         try{
-            const response = await axios.post("http://backend:3000/auth/login", {username : id, pw});
-            const data = response.data;
-
-            if (data.access_token) {
-                localStorage.setItem("access_token", data.access_token); // JWT 토큰을 로컬 스토리지에 저장
+            const reqdata = {
+                id: id,
+                password: pw,
+            };
+            console.log(reqdata);
+            const response = await axios.post("http://localhost:3000/auth/login", JSON.stringify(reqdata), {
+                headers: {"Content-Type": "application/json"},
+            });
+            console.log("response:" ,response);
+            if (response.status === 201) {
+                localStorage.setItem("access_token", response.data.access_token); // JWT 토큰을 로컬 스토리지에 저장
                 console.log(localStorage.getItem(id));
                 goToHome();
             } else {
