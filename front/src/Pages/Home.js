@@ -72,7 +72,7 @@ function Home() {
 
     useEffect(() => {
         // 사용자의 로그인 상태를 확인합니다.
-        const token = localStorage.getItem('userToken');
+        const token = localStorage.getItem('access_token');
         if (!token) {
             // 토큰이 없으면 로그인 페이지로 리디렉션합니다.
             navigate('/login');
