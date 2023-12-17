@@ -1,4 +1,4 @@
-import { IsArray, IsBoolean, IsDate, IsInt, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsBoolean, IsDate, IsInt, IsNotEmpty, IsString, ValidateNested, IsOptional } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 import { Todo } from './todo.entity';
 
@@ -14,8 +14,9 @@ export class DeleteOneTodoRequest{
   readonly todoId: number;
 }
 export class StartTodoRequest {
+  @IsOptional()
   @IsInt()
-  readonly userId: number;
+  userId?: number;
 
   @IsInt()
   readonly projectId: number;
@@ -28,8 +29,9 @@ export class StartTodoRequest {
   readonly startTime: Date;
 }
 export class StopTodoRequest {
+  @IsOptional()
   @IsInt()
-  readonly userId: number;
+  userId?: number;
 
   @IsInt()
   readonly projectId: number;
