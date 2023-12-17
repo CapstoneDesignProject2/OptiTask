@@ -95,7 +95,7 @@ function Home() {
             const decoded = jwtDecode(token);
             setUserId(decoded.userId);
             // 서버로부터 프로젝트 데이터 가져오기
-            axios.get(`http://backend:3000/project/${decoded.userId}`)
+            axios.get(`https://optitask.site/api/project/${decoded.userId}`)
                 .then(response => {
                     // 성공적으로 데이터를 받아오면 state 업데이트
                     setProjects(response.data.AllProjects); // 응답 구조에 따라 변경될 수 있습니다.

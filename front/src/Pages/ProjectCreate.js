@@ -79,7 +79,7 @@ function ProjectCreate() {
 
         // 서버로 새 프로젝트 데이터를 POST 요청으로 전송합니다.
         const handleSubmit = () => {
-            axios.post('http://backend:3000/project', projectData)
+            axios.post(`https://optitask.site/api/project`, projectData)
                 .then(response => {
                     // 요청이 성공했으면 홈 페이지로 이동합니다.
                     navigate('/');

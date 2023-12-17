@@ -67,7 +67,7 @@ function Login({ }) {
                 password: pw,
             };
             console.log(reqdata);
-            const response = await axios.post("http://backend:3000/auth/login", JSON.stringify(reqdata), {
+            const response = await axios.post(`https://optitask.site/api/auth/login`, JSON.stringify(reqdata), {
                 headers: {"Content-Type": "application/json"},
             });
             console.log("response:" ,response);
