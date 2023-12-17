@@ -12,7 +12,7 @@ const WeeklyReport = () => {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const response = await axios.get("http://backend:3000/report/${userId}/${projectId}");
+                const response = await axios.get(`https://optitask.site/api/report/${userId}/${projectId}`);
                 setReports(response.data);
                 setLoading(false);
             } catch (err) {
