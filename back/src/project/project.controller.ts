@@ -2,8 +2,6 @@ import { Request, Body, Controller, Delete, Get, Param, Patch, Post, UseGuards }
 import { ProjectService } from './project.service';
 import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse } from './project.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse, UpdateProjectRequest } from './project.dto';
-import { ProjectService } from './project.service';
 
 @Controller('project')
 @UseGuards(AuthGuard('jwt'))
