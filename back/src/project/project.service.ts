@@ -9,7 +9,6 @@ import { ProjectRepository } from './project.repository';
 @Injectable()
 export class ProjectService {
   constructor(
-    @InjectRepository(Project)
     private projectRepository: ProjectRepository,
     
     private readonly todoService: TodoService,
