@@ -51,10 +51,18 @@ function Join() {
         }
     };
 
-    const handleSignUp = async (id, pw) => {
+    const handleSignUp = async () => {
         try{
-            const response = await axios.post("http://backend:3000/users/signup", {id, pw});
-            if (response.data.success){
+            const reqdata = {
+                id: id,
+                password: pw,
+            };
+            console.log(reqdata);
+            const response = await axios.post("http://localhost:3000/users/signup", JSON.stringify(reqdata), {
+                headers: { "Content-Type": "application/json" },
+            });
+            console.log("response: ", response);
+            if (response.status === 201){
                 goToLogin(); // 회원가입했으니 로그인하러 가기
             }
             else{
@@ -75,7 +83,7 @@ function Join() {
             <br />
             <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={styles.input} />
             <br />
-            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>SignUp</button>
+            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>Sign Up</button>
         </div>
     );
 }
