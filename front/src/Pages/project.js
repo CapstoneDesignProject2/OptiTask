@@ -1,65 +1,62 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-function ProjectDetail() {
+function Project() {
     const navigate = useNavigate();
     const { projectId } = useParams();//url로 받은 projectId 를 projecId로 할당 이 변수를 가지고 서버에 projectId에 해당하는 데이터를 요청
+    const { userId } = useParams();
     const [project, setProject] = useState(null);
     const [todos, setTodos] = useState([]);
 
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
-
-        // 예시: setProject(...) 및 setTodos(...)
-        //내부 로직의 예시: fetch(`/api/project/${projectId}`).then(...).then(data => setProject(data));
-    }, [projectId]);
-
-    const handleStart = (todoId) => {
-        const startTime = new Date(); // 현재 시각
-        fetch(`/api/todos/${todoId}/start`, {  //api주소는 임의 , 정적 url을 쓸거라면 body에 todoid를 첨부해야함
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ startTime: startTime.toISOString() }),
-        })
+        axios.get(`http://localhost:3000/project/${userId}/${projectId}`)
             .then(response => {
-                if (response.ok) {
-                    // 서버 응답이 성공적이면, ToDo 항목 상태 업데이트
-                    // 두번쨰 인자로 key:value 객체로써 전달하는 이유는 update함수에서 todo 객체와 비교를 하기위함 즉, todo의 내부속성 starttime이 key:value 구조로 있기떄문에 맞춰주는것
-                    updateTodoState(todoId, { startTime: startTime });
+                setProject(response.data);
 
-                } else {
-                    // 에러 처리
-                    console.error('Start time update failed');
-                }
+                return axios.get(`http://localhost:3000/todo/${userId}/${projectId}`);
+            })
+            .then(response => {
+                setTodos(response.data);
             })
             .catch(error => {
-                // 네트워크 에러 처리
+                console.error('Error:', error);
+            });
+    }, [projectId, userId]);
+
+    // 렌더링 로직 및 기타 함수들...
+
+    const handleStart = (todoId) => {
+        const startTime = new Date();
+        axios.post(`http://localhost:3000/todo/start`, {
+            startTime: startTime.toISOString(),
+            userId: userId,
+            todoId: todoId,
+            projectId: projectId
+        })
+            .then(response => {
+                updateTodoState(todoId, { startTime: startTime });
+            })
+            .catch(error => {
                 console.error('Network error:', error);
             });
     };
 
     const handleStop = (todoId) => {
-        const stopTime = new Date(); // 현재 시각
-        fetch(`/api/todos/${todoId}/stop`, { //api주소는 임의
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ stopTime: stopTime.toISOString() }),
+        const stopTime = new Date();
+        const success = true;
+        axios.post(`http://localhost:3000/todo/stop`, {
+            stopTime: stopTime.toISOString(),
+            userId: userId,
+            todoId: todoId,
+            projectId: projectId,
+            success: success
         })
             .then(response => {
-                if (response.ok) {
-                    // 서버 응답이 성공적이면, ToDo 항목 상태 업데이트
-                    updateTodoState(todoId, { stopTime: stopTime });
-                } else {
-                    // 에러 처리
-                    console.error('Stop time update failed');
-                }
+                updateTodoState(todoId, { stopTime: stopTime });
             })
             .catch(error => {
-                // 네트워크 에러 처리
                 console.error('Network error:', error);
             });
     };
@@ -94,13 +91,15 @@ function ProjectDetail() {
     );
 }
 
-export default ProjectDetail;
+export default Project;
 
 /*
-todos의 객체 구조 예시 
+todos의 객체 구조 예시
 const todos = [
     { id: 1, name: "ToDo Item 1", description: "Description 1", startTime: null, stopTime: null, completed: false },
     { id: 2, name: "ToDo Item 2", description: "Description 2", startTime: null, stopTime: null, completed: false },
     // 기타 ToDo 항목들...
 ];
 */
+
+//start랑 stop 전달해주고 어떻게 전달할지 body체크하시고 todos 객체 구조를 정확히 파악하시고 정도?

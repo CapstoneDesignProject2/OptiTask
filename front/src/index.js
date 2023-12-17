@@ -1,9 +1,13 @@
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import './axios'; // 여기서 Axios 설정을 import
+import './index.css';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter }from 'react-router-dom';
+
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
