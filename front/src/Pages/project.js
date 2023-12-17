@@ -11,11 +11,11 @@ function Project() {
 
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
-        axios.get(`http://backend:3000/project/${userId}/${projectId}`)
+        axios.get(`https://optitask.site/api/project/${userId}/${projectId}`)
             .then(response => {
                 setProject(response.data);
 
-                return axios.get(`http://backend:3000/todo/${userId}/${projectId}`);
+                return axios.get(`https://optitask.site/api/todo/${userId}/${projectId}`);
             })
             .then(response => {
                 setTodos(response.data);
@@ -29,7 +29,7 @@ function Project() {
 
     const handleStart = (todoId) => {
         const startTime = new Date();
-        axios.post(`http://backend:3000/todo/start`, {
+        axios.post(`https://optitask.site/api/todo/start`, {
             startTime: startTime.toISOString(),
             userId: userId,
             todoId: todoId,
@@ -46,7 +46,7 @@ function Project() {
     const handleStop = (todoId) => {
         const stopTime = new Date();
         const success = true;
-        axios.post(`http://backend:3000/todo/stop`, {
+        axios.post(`https://optitask.site/api/todo/stop`, {
             stopTime: stopTime.toISOString(),
             userId: userId,
             todoId: todoId,
