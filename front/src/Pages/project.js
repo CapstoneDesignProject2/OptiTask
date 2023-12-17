@@ -1,3 +1,4 @@
+
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -5,17 +6,16 @@ import { useNavigate, useParams } from "react-router-dom";
 function Project() {
     const navigate = useNavigate();
     const { projectId } = useParams();//url로 받은 projectId 를 projecId로 할당 이 변수를 가지고 서버에 projectId에 해당하는 데이터를 요청
-    const { userId } = useParams();
     const [project, setProject] = useState(null);
     const [todos, setTodos] = useState([]);
 
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
-        axios.get(`https://optitask.site/api/project/${userId}/${projectId}`)
+        axios.get(`http://localhost:3000/project/${projectId}`)
             .then(response => {
                 setProject(response.data);
 
-                return axios.get(`https://optitask.site/api/todo/${userId}/${projectId}`);
+                return axios.get(`http://localhost:3000/todo/${projectId}`);
             })
             .then(response => {
                 setTodos(response.data);
@@ -23,15 +23,14 @@ function Project() {
             .catch(error => {
                 console.error('Error:', error);
             });
-    }, [projectId, userId]);
+    }, [projectId]);
 
     // 렌더링 로직 및 기타 함수들...
 
     const handleStart = (todoId) => {
         const startTime = new Date();
-        axios.post(`https://optitask.site/api/todo/start`, {
+        axios.post(`http://localhost:3000/todo/start`, {
             startTime: startTime.toISOString(),
-            userId: userId,
             todoId: todoId,
             projectId: projectId
         })
@@ -46,9 +45,8 @@ function Project() {
     const handleStop = (todoId) => {
         const stopTime = new Date();
         const success = true;
-        axios.post(`https://optitask.site/api/todo/stop`, {
+        axios.post(`http://localhost:3000/todo/stop`, {
             stopTime: stopTime.toISOString(),
-            userId: userId,
             todoId: todoId,
             projectId: projectId,
             success: success
@@ -103,3 +101,6 @@ const todos = [
 */
 
 //start랑 stop 전달해주고 어떻게 전달할지 body체크하시고 todos 객체 구조를 정확히 파악하시고 정도?
+
+
+
