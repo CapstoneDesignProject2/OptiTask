@@ -51,9 +51,21 @@ function Join() {
         }
     };
 
-    const handleSignUp = async (id, pw) => {
+    const handleSignUp = async () => {
         try{
-            const response = await axios.post("http://backend:3000/users/signup", {id, pw});
+            const reqdata = {
+                id: id,
+                password: pw,
+            };
+            console.log(reqdata);
+            const response = await axios.interceptors.request.use(async config => {
+                const token = await LocalStorage.get('token');
+                if (token) {
+                  config.headers.Authorization = `Bearer ${token}`;
+                }
+                return config;
+              });
+            console.log(response);
             if (response.data.success){
                 goToLogin(); // 회원가입했으니 로그인하러 가기
             }
@@ -75,7 +87,7 @@ function Join() {
             <br />
             <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={styles.input} />
             <br />
-            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>SignUp</button>
+            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>Sign Up</button>
         </div>
     );
 }
