@@ -4,8 +4,9 @@ import { Project } from './project.entity';
 import { User } from 'src/user/user.entity';
 
 export class CreateProjectRequest {
+  @IsOptional()
   @IsInt()
-  readonly userId: number;
+  userId?: number;
   
   @IsString()
   readonly projectName: string;
@@ -21,8 +22,9 @@ export class CreateProjectRequest {
   readonly deadline: Date;
 }
 export class UpdateProjectRequest {
+  @IsOptional()
   @IsInt()
-  readonly userId: number;
+  userId?: number;
 
   @IsInt()
   readonly projectId: number;

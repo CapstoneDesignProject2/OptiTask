@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Request, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -7,21 +7,25 @@ import { AuthGuard } from '@nestjs/passport';
 export class ReportController {
   constructor(private readonly reportService: ReportService) {}
 
-  @Get(':userId/:reportId')
-  findWeeklyReport(@Param('userId') useId: number, @Param('reportId') reportId: number) {
-    return this.reportService.findWeeklyReport(useId, reportId);
+  @Get(':reportId')
+  findWeeklyReport(@Request() req: any, @Param('reportId') reportId: number) {
+    const userId = req.user.userId;
+    return this.reportService.findWeeklyReport(userId, reportId);
   }
-  @Get(':userId/:projectId')
-  findWeeklyReportsByProjectId(@Param('userId') useId: number, @Param('projectId') projectId: number) {
-    return this.reportService.findWeeklyReportsByProjectId(useId, projectId)
+  @Get(':projectId')
+  findWeeklyReportsByProjectId(@Request() req: any, @Param('projectId') projectId: number) {
+    const userId = req.user.userId;
+    return this.reportService.findWeeklyReportsByProjectId(userId, projectId)
   }
-  @Get(':userId/trend/:projectId')
-  findReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
-    return this.reportService.findReportTrend(useId, projectId);
+  @Get('trend/:projectId')
+  findReportTrend(@Request() req: any, @Param('projectId') projectId: number) {
+    const userId = req.user.userId;
+    return this.reportService.findReportTrend(userId, projectId);
   }
-  @Get(':userId/trend/:projectId/advice')
-  findAdviceForReportTrend(@Param('userId') useId: number, @Param('projectId') projectId: number) {
-    return this.reportService.findAdviceForReportTrend(useId, projectId);
+  @Get('trend/:projectId/advice')
+  findAdviceForReportTrend(@Request() req: any, @Param('projectId') projectId: number) {
+    const userId = req.user.userId;
+    return this.reportService.findAdviceForReportTrend(userId, projectId);
   }
   @Post()
   createWeeklyReports() {
