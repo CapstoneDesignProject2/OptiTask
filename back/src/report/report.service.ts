@@ -13,7 +13,6 @@ export class ReportService {
   private openai: OpenAI;
 
   constructor(
-    @InjectRepository(Report)
     private readonly reportRepository: ReportRepository,
   
     private readonly todoService: TodoService,
@@ -120,6 +119,6 @@ export class ReportService {
     return await this.createReport();
   }
   async saveReport(report: Report) {
-    return this.reportRepository.save(report);
+    return this.reportRepository.saveReport(report);
   }
 }

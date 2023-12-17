@@ -1,22 +1,28 @@
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Report } from './report.entity';
+import { Injectable } from '@nestjs/common';
 
-export class ReportRepository extends Repository<Report> {
+@Injectable()
+export class ReportRepository {
+  private readonly reportRepository: Repository<Report>;
+  constructor(private readonly dataSources: DataSource) {
+    this.reportRepository = this.dataSources.getRepository(Report);
+  }
 
   async findAllReport(userId: number): Promise<Report[]> {
-    return this.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
         .innerJoinAndSelect("report.project", "project")
         .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
         .getMany();
   }
   async findWeeklyReportsByProjectId(userId: number, projectId: number): Promise<Report[]> {
-    return this.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
         .innerJoinAndSelect("report.project", "project", "project.projectId = :projectId", { projectId })
         .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
         .getMany();
   }
   async findWeeklyReport(userId: number, reportId: number): Promise<Report> {
-    return this.createQueryBuilder("report")
+    return this.reportRepository.createQueryBuilder("report")
         .innerJoinAndSelect("report.project", "project")
         .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
         .where("report.reportId = :reportId", { reportId })
@@ -31,6 +37,6 @@ export class ReportRepository extends Repository<Report> {
     return newReport;
   }
   async saveReport(report: Report) {
-    return this.save(report);
+    return this.reportRepository.save(report);
   }
 }
