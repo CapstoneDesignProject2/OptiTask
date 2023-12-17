@@ -1,12 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { ProjectService } from './project.service';
-import { CreateProjectRequest, UpdateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse } from './project.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CreateProjectRequest, DeleteProejctRequest, FindAllProjectResponse, FindOneProjectResponse, UpdateProjectRequest } from './project.dto';
+import { ProjectService } from './project.service';
 
 @Controller('project')
-@UseGuards(AuthGuard('jwt'))
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(private readonly projectService: ProjectService) { }
 
   @Get(':userId')
   async findAllProject(@Param('userId') userId: number) {
@@ -17,6 +16,7 @@ export class ProjectController {
     return new FindOneProjectResponse(await this.projectService.findOneProject(userId, projectId));
   }
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   createProject(@Body() createProjectRequest: CreateProjectRequest) {
     return this.projectService.createProject(createProjectRequest);
   }
