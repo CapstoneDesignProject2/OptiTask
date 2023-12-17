@@ -59,12 +59,12 @@ function Join() {
             };
             console.log(reqdata);
             const response = await axios.interceptors.request.use(async config => {
-                const token = await LocalStorage.get('token');
+                const token = await localStorage.get('token');
                 if (token) {
                   config.headers.Authorization = `Bearer ${token}`;
                 }
                 return config;
-              });
+            });
             console.log(response);
             if (response.data.success){
                 goToLogin(); // 회원가입했으니 로그인하러 가기
