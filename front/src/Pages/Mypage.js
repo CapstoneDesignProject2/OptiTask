@@ -69,6 +69,24 @@ function Mypage({}) {
             width: '100%', // 전체 너비 사용
             flexWrap: 'wrap', // 요소가 너무 많으면 다음 줄로 넘어감
         },
+        input: {
+            padding: '10px',
+            margin: '10px 0',
+            border: '1px solid #ccc',
+            borderRadius: '5px',
+            width: '60%', // 입력 필드 너비 설정
+        },
+        button: {
+            cursor: 'pointer',
+            padding: '15px 30px',
+            margin: '20px 0', // 버튼 상하 여백 증가
+            border: 'none',
+            backgroundColor: 'black',
+            color: 'white',
+            fontSize: '18px',
+            borderRadius: '5px',
+            width: '60%', // 버튼 너비를 입력 필드와 동일하게 설정
+        },
     };
 
 
@@ -76,37 +94,44 @@ function Mypage({}) {
     return (
         <div style={styles.container}>
             <Title></Title>
-            <button onClick={logout}>logout</button>
-            <button onClick={() => setShowPasswordChange(!showPasswordChange)}>
-                비밀번호 변경
-            </button>
+            {!showPasswordChange && (
+                <>
+                    <button style = {styles.button} onClick={logout}>logout</button>
+                    <button style = {styles.button} onClick={() => setShowPasswordChange(!showPasswordChange)}>비밀번호 변경</button>
+                </>
+            )}
+            
             {showPasswordChange && (
                 <div>
                     <input
+                        style={styles.input}
                         type="text"
                         placeholder="ID"
                         value={id}
                         onChange={(e) => setID(e.target.value)}
                     />
                     <input
+                        style={styles.input}
                         type="password"
                         placeholder="Current Password"
                         value={currentPassword}
                         onChange={(e) => setCurrentPassword(e.target.value)}
                     />
                     <input
+                        style={styles.input}
                         type="password"
                         placeholder="New Password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
                     <input
+                        style={styles.input}
                         type="password"
                         placeholder="Confirm New Password"
                         value={confirmNewPassword}
                         onChange={(e) => setConfirmNewPassword(e.target.value)}
                     />
-                    <button onClick={handleChangePassword}>Change Password</button>
+                    <button style={styles.button} onClick={handleChangePassword}>Change Password</button>
                 </div>
             )}
         </div>
