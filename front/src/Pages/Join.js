@@ -58,15 +58,11 @@ function Join() {
                 password: pw,
             };
             console.log(reqdata);
-            const response = await axios.interceptors.request.use(async config => {
-                const token = await localStorage.get('token');
-                if (token) {
-                  config.headers.Authorization = `Bearer ${token}`;
-                }
-                return config;
+            const response = await axios.post("http://localhost:3000/users/signup", JSON.stringify(reqdata), {
+                headers: { "Content-Type": "application/json" },
             });
-            console.log(response);
-            if (response.data.success){
+            console.log("response: ", response);
+            if (response.status === 201){
                 goToLogin(); // 회원가입했으니 로그인하러 가기
             }
             else{
