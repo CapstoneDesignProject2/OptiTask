@@ -61,7 +61,7 @@ function Home() {
             color: 'white',
             fontSize: '18px', // 글씨 크기 증가
             borderRadius: '5px', // 버튼의 모서리 둥글게
-            marginTop: '-180px'
+            marginTop: '-20px'
         },
 
         header: {
