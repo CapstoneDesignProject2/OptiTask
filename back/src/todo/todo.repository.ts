@@ -51,8 +51,8 @@ export class TodoRepository extends Repository<Todo> {
     const newTodo = new Todo();
     newTodo.todoName = "emptyTodo";
     newTodo.startTime = null;
-    newTodo.tempTime = null;
-    newTodo.endTime = null;
+    newTodo.tempTime = new Date(0);
+    newTodo.endTime = new Date(0);
     newTodo.todoTotalTime = 0;
     newTodo.success = false;
     newTodo.project = null;

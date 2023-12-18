@@ -46,7 +46,9 @@ export class TodoService {
   async startTodo(startTodoRequest: StartTodoRequest) {
     const todo = await this.todoRepository.findOneTodo(startTodoRequest.userId, startTodoRequest.projectId ,startTodoRequest.todoId);
 
-    todo.startTime = todo.startTime ? todo.startTime : startTodoRequest.startTime;
+    if (todo.startTime.getTime() === 0) {
+      todo.startTime = startTodoRequest.startTime;
+    }
     todo.tempTime = startTodoRequest.startTime;
     this.todoRepository.save(todo);
   }
