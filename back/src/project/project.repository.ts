@@ -21,7 +21,7 @@ export class ProjectRepository extends Repository<Project> {
     const newProject = new Project();
 
     newProject.projectName = "emptyProject";
-    newProject.deadline = null;
+    newProject.deadline = new Date(0);
     newProject.user = { userId } as any; // work?
     
     return newProject;
