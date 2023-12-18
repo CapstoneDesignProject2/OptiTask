@@ -50,7 +50,7 @@ export class TodoRepository extends Repository<Todo> {
   async createTodo(): Promise<Todo>  {
     const newTodo = new Todo();
     newTodo.todoName = "emptyTodo";
-    newTodo.startTime = null;
+    newTodo.startTime = new Date(0);
     newTodo.tempTime = new Date(0);
     newTodo.endTime = new Date(0);
     newTodo.todoTotalTime = 0;
