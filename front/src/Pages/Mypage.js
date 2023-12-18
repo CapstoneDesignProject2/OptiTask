@@ -55,7 +55,6 @@ function Mypage({}) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'space-around', // 요소들 사이의 공간을 균등하게 분배
             height: '100vh',
             color: 'black',
             backgroundColor: 'white',
@@ -63,32 +62,34 @@ function Mypage({}) {
             maxWidth: '1200px', // 컨테이너 최대 너비 설정
             margin: '0 auto', // 가운데 정렬
         },
-        projectContainer: {
+        inputContainer: {
             display: 'flex',
-            justifyContent: 'space-around', // 프로젝트 사이의 공간을 균등하게 분배
-            width: '100%', // 전체 너비 사용
-            flexWrap: 'wrap', // 요소가 너무 많으면 다음 줄로 넘어감
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            width: '100%', // 입력 필드를 감싸는 컨테이너 너비
         },
         input: {
             padding: '10px',
             margin: '10px 0',
             border: '1px solid #ccc',
             borderRadius: '5px',
-            width: '60%', // 입력 필드 너비 설정
+            width: '80%', // 입력 필드 너비 설정
+            maxWidth: '400px', // 입력 필드 최대 너비 제한
         },
         button: {
             cursor: 'pointer',
             padding: '15px 30px',
-            margin: '20px 0', // 버튼 상하 여백 증가
             border: 'none',
             backgroundColor: 'black',
+            marginTop: '30px',
             color: 'white',
             fontSize: '18px',
             borderRadius: '5px',
-            width: '60%', // 버튼 너비를 입력 필드와 동일하게 설정
+            width: '80%', // 버튼 너비를 입력 필드와 동일하게 설정
+            maxWidth: '400px', // 버튼 최대 너비 제한
         },
     };
-
 
 
     return (
@@ -96,13 +97,14 @@ function Mypage({}) {
             <Title></Title>
             {!showPasswordChange && (
                 <>
-                    <button style = {styles.button} onClick={logout}>logout</button>
+                    <button style = {styles.button} onClick={logout}>Logout</button>
                     <button style = {styles.button} onClick={() => setShowPasswordChange(!showPasswordChange)}>비밀번호 변경</button>
                 </>
             )}
             
             {showPasswordChange && (
-                <div>
+                <div style={styles.inputContainer}>
+                    <h3>비밀번호를 변경하십시오.</h3>
                     <input
                         style={styles.input}
                         type="text"
