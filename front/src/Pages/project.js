@@ -101,7 +101,7 @@ function Project() {
     //setTodos 함수 내부에서 map함수를 통해 todo 요소들을 업데이트 (직접적인 업데이트가 아닌 함수를 통한 조건적 업데이트)
     const updateTodoState = (todoId, updates) => {
         setTodos(todos => todos.map(todo =>
-            todo.id === todoId ? { ...todo, ...updates } : todo
+            todo.todoId === todoId ? { ...todo, ...updates } : todo
         ));
     };
     const navigateToReport = () => {
