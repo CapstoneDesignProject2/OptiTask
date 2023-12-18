@@ -9,50 +9,89 @@ function Project() {
     const [project, setProject] = useState(null);
     const [todos, setTodos] = useState([]);
 
+
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
         axios.get(`http://localhost:3000/project/${projectId}`)
             .then(response => {
+                console.log('Project data:', response.data);
                 setProject(response.data);
 
                 return axios.get(`http://localhost:3000/todo/${projectId}`);
             })
             .then(response => {
-                setTodos(response.data);
+                console.log('Todos data:', response.data.todosByProjectId);
+                setTodos(response.data.todosByProjectId);
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error fetching data:', error);
             });
     }, [projectId]);
 
     // 렌더링 로직 및 기타 함수들...
 
+    const handleSuccessChange = (todoId, isChecked) => {
+        setTodos(todos => todos.map(todo =>
+            todo.todoId === todoId ? { ...todo, success: isChecked } : todo
+        ));
+    };
+
     const handleStart = (todoId) => {
         const startTime = new Date();
-        axios.post(`http://localhost:3000/todo/start`, {
-            startTime: startTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId
+        const userId = 23
+        const numericProjectId = Number(projectId);
+        const numerictodoId = Number(todoId);
+
+        const startTimedata = {
+            userId: userId,
+            startTime: startTime,
+            todoId: numerictodoId,
+            projectId: numericProjectId
+        }
+
+        axios.post(`http://localhost:3000/todo/start`, JSON.stringify(startTimedata), {
+            headers: { "Content-Type": "application/json" },
         })
             .then(response => {
                 updateTodoState(todoId, { startTime: startTime });
+
+                return axios.get(`http://localhost:3000/todo/${projectId}`);
+            })
+            .then(response => {
+                console.log('retry Todos data:', response.data.todosByProjectId);
             })
             .catch(error => {
                 console.error('Network error:', error);
             });
+
     };
 
     const handleStop = (todoId) => {
         const stopTime = new Date();
-        const success = true;
-        axios.post(`http://localhost:3000/todo/stop`, {
-            stopTime: stopTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId,
-            success: success
+        // success 값을 찾아서 해당 todo의 현재 상태에 따라 설정합니다.
+        const todo = todos.find(todo => todo.todoId === todoId);
+        const success = todo ? todo.success : false;
+        const userId = 23
+        const numericProjectId = Number(projectId);
+        const numerictodoId = Number(todoId);
+
+        const stopTimedata = {
+            userId: userId,
+            stopTime: stopTime,
+            todoId: numerictodoId,
+            projectId: numericProjectId,
+            sucess: success // success 상태를 서버로 전송
+        }
+
+        axios.post(`http://localhost:3000/todo/stop`, JSON.stringify(stopTimedata), {
+            headers: { "Content-Type": "application/json" },
         })
             .then(response => {
-                updateTodoState(todoId, { stopTime: stopTime });
+                updateTodoState(todoId, { stopTime: stopTime, success: success });
+                return axios.get(`http://localhost:3000/todo/${projectId}`);
+            })
+            .then(response => {
+                console.log('retry stopTodos data:', response.data.todosByProjectId);
             })
             .catch(error => {
                 console.error('Network error:', error);
@@ -75,12 +114,18 @@ function Project() {
 
     return (
         <div>
-            <h1>{project.name}</h1>
+            <h1>{project.projectName}</h1>
             {todos.map((todo) => (
-                <div key={todo.id}>
-                    <span>{todo.name}</span>
-                    {!todo.startTime && <button onClick={() => handleStart(todo.id)}>Start</button>}
-                    {todo.startTime && !todo.endTime && <button onClick={() => handleStop(todo.id)}>Stop</button>}
+                <div key={todo.todoId}>
+                    <span>{todo.todoName}</span>
+                    <button onClick={() => handleStart(todo.todoId)}>Start</button>
+                    <button onClick={() => handleStop(todo.todoId)}>Stop</button>
+                    <input
+                        type="checkbox"
+                        checked={todo.success}
+                        onChange={(e) => handleSuccessChange(todo.todoId, e.target.checked)}
+                    />
+                    {todo.success ? <span>성공</span> : <span>실패</span>}
                     {todo.endTime && <span>완료</span>}
                 </div>
             ))}
