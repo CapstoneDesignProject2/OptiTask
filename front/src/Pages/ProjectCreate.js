@@ -79,9 +79,11 @@ function ProjectCreate() {
             userId,
             projectName,
             todoList,
-            deadline: new Date(deadline).toISOString() // ISO 형식의 문자열로 변환
+            deadline
         };
-        axios.post(`http://localhost:3000/project`, projectData)
+        axios.post(`http://localhost:3000/project`, JSON.stringify(projectData), {
+            headers: { "Content-Type": "application/json" },
+        })
             .then(response => {
                 // 요청이 성공했으면 홈 페이지로 이동합니다.
                 navigate('/');

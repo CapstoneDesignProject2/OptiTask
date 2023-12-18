@@ -27,12 +27,17 @@ function Project() {
 
     // 렌더링 로직 및 기타 함수들...
 
+
+
     const handleStart = (todoId) => {
         const startTime = new Date();
-        axios.post(`http://localhost:3000/todo/start`, {
-            startTime: startTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId
+        const StartData = {
+            startTime,
+            todoId,
+            projectId
+        }
+        axios.post(`http://localhost:3000/todo/start`, JSON.stringify(StartData), {
+            headers: { "Content-Type": "application/json" },
         })
             .then(response => {
                 updateTodoState(todoId, { startTime: startTime });
@@ -42,15 +47,21 @@ function Project() {
             });
     };
 
+
+
     const handleStop = (todoId) => {
         const stopTime = new Date();
         const success = true;
-        axios.post(`http://localhost:3000/todo/stop`, {
-            stopTime: stopTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId,
-            success: success
+        const StopData = {
+            stopTime,
+            todoId,
+            projectId,
+            success
+        }
+        axios.post(`http://localhost:3000/todo/stop`, JSON.stringify(StopData), {
+            headers: { "Content-Type": "application/json" },
         })
+
             .then(response => {
                 updateTodoState(todoId, { stopTime: stopTime });
             })
