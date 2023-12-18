@@ -11,7 +11,6 @@ const Title = () => {
       textAlign: 'center', // 글자를 가운데 정렬
       margin: '0', // 위아래 여백 제거
       padding: '20px 0', // 위아래 패딩 추가
-      marginTop: '-80px'
   },
   };
 
