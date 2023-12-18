@@ -11,7 +11,7 @@ export class TodoRepository {
   }
 
   async findAllTodosByAllUsers(): Promise<Todo[]> {
-    return this.todoRepository.find()
+    return this.todoRepository.find({ relations: ['project', 'project.user'] })
   }
   async findAllTodos(userId: number): Promise<Todo[]> {
     return this.todoRepository.createQueryBuilder("todo")
