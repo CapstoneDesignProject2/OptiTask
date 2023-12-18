@@ -4,41 +4,34 @@ import { useParams } from 'react-router-dom';
 import Title from '../Components/Title';
 
 const WeeklyReport = () => {
-    const { userId, projectId } = useParams();
-    const [reports, setReports] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const navigate = useNavigate();
+    const { projectId } = useParams();
+    
 
     useEffect(() => {
-        const fetchReports = async () => {
-            try {
-                const response = await axios.get(`https://optitask.site/api/report/${userId}/${projectId}`);
-                setReports(response.data);
-                setLoading(false);
-            } catch (err) {
-                setError(err);
-                setLoading(false);
-            }
-        };
+        axios.post('http://localhost:3000/report');
+        //  weakly reports by projectid
+        axios.get(`http://localhost:3000/report/${projectId}`)
+            .then(response => {
+                console.log(response.data);
+            })
 
-        fetchReports();
-    }, [userId, projectId]);
-
-    if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+        // find report trend
+        axios.get(`http://localhost:3000/report/trend/${projectId}`)
+            .then(response=> {
+                console.log(response.data);
+            })
+        //  find adivce for report trend
+        axios.get(`http://localhost:3000/report/trend/${projectId}/advice`)
+            .then(response => {
+                console.log(response.data);
+            })
+    });
+    
 
     return (
         <div>
             <Title></Title>
-            <ul>
-                {reports.map(report => (
-                    <li key={report.reportId}>
-                        <div>주차: {report.reportWeek}</div>
-                        <div>총 작업 시간: {report.weeklyTotalTime}시간</div>
-                        <div>성공한 할 일 수: {report.successTodo}</div>
-                    </li>
-                ))}
-            </ul>
         </div>
     );
 };
