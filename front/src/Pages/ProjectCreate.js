@@ -1,6 +1,9 @@
+
+
+
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function ProjectCreate() {
     const navigate = useNavigate();
@@ -8,10 +11,8 @@ function ProjectCreate() {
     const [deadline, setDeadline] = useState('');
     const [todos, setTodos] = useState([]);
     const [todoInput, setTodoInput] = useState('');
-    const { userId } = useParams();
 
     const styles = {
-
 
         container: {
 
@@ -58,6 +59,7 @@ function ProjectCreate() {
         setTodoInput(event.target.value);
     };
 
+
     const handleAddTodo = () => {
         if (todoInput.trim() !== '') {
             setTodos([...todos, { id: Date.now(), text: todoInput, completed: false }]);
@@ -65,31 +67,32 @@ function ProjectCreate() {
         }
     };
 
+
+    // 서버로 새 프로젝트 데이터를 POST 요청으로 전송합니다.
     const handleSubmit = () => {
+
         // ToDo 목록을 문자열 배열로 변환합니다.
         const todoList = todos.map(todo => todo.text);
-
+        const userId = 23;
         // 프로젝트 데이터 객체를 생성합니다.
         const projectData = {
+            userId,
             projectName,
             todoList,
-            userId,
             deadline: new Date(deadline).toISOString() // ISO 형식의 문자열로 변환
         };
-
-        // 서버로 새 프로젝트 데이터를 POST 요청으로 전송합니다.
-        const handleSubmit = () => {
-            axios.post(`https://optitask.site/api/project`, projectData)
-                .then(response => {
-                    // 요청이 성공했으면 홈 페이지로 이동합니다.
-                    navigate('/');
-                })
-                .catch(error => {
-                    // 요청이 실패했다면 오류 메시지를 표시할 수 있습니다.
-                    console.error('Error:', error);
-                });
-        };
+        axios.post(`http://localhost:3000/project`, projectData)
+            .then(response => {
+                // 요청이 성공했으면 홈 페이지로 이동합니다.
+                navigate('/');
+            })
+            .catch(error => {
+                // 요청이 실패했다면 오류 메시지를 표시할 수 있습니다.
+                console.error('Error:', error);
+            });
     };
+
+
     return (
 
         <div style={styles.container}>
@@ -118,3 +121,4 @@ function ProjectCreate() {
 }
 
 export default ProjectCreate;
+
