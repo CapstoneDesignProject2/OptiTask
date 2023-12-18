@@ -13,7 +13,6 @@ export class CreateProjectRequest {
 
   @IsArray()
   @IsNotEmpty()
-  @ValidateNested( {each: true})
   @Type(() => String)
   readonly todoList: string[];
 
