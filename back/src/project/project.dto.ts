@@ -44,7 +44,6 @@ export class DeleteProejctRequest {
 export class FindAllProjectResponse{
   @IsArray()
   @IsNotEmpty()
-  @ValidateNested({ each: true })
   @Type(() => Project)
   readonly AllProjects: Project[]
 
