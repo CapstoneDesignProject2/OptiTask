@@ -13,7 +13,6 @@ export class CreateProjectRequest {
 
   @IsArray()
   @IsNotEmpty()
-  @ValidateNested( {each: true})
   @Type(() => String)
   readonly todoList: string[];
 
@@ -45,7 +44,6 @@ export class DeleteProejctRequest {
 export class FindAllProjectResponse{
   @IsArray()
   @IsNotEmpty()
-  @ValidateNested({ each: true })
   @Type(() => Project)
   readonly AllProjects: Project[]
 

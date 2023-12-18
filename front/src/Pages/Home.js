@@ -1,5 +1,4 @@
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -92,10 +91,8 @@ function Home() {
         // 사용자의 로그인 상태를 확인
         const token = localStorage.getItem('access_token');
         if (token) {
-            const decoded = jwtDecode(token);
-            setUserId(decoded.userId);
             // 서버로부터 프로젝트 데이터 가져오기
-            axios.get(`https://optitask.site/api/project/${decoded.userId}`)
+            axios.get(`http://localhost:3000/project/`)
                 .then(response => {
                     // 성공적으로 데이터를 받아오면 state 업데이트
                     setProjects(response.data.AllProjects); // 응답 구조에 따라 변경될 수 있습니다.
@@ -113,7 +110,7 @@ function Home() {
 
 
     const handleProjectClick = (projectId) => {
-        navigate(`/project/${userId}/${projectId}`);
+        navigate(`/project/${projectId}`);
 
     };
 
@@ -135,7 +132,7 @@ function Home() {
     return (
         <div style={styles.container}>
             <h1 style={styles.header}>OptiTask</h1>
-            <button style={styles.create_button} onClick={() => navigate(`/ProjectCreate/${userId}`)}>Create New Project</button>
+            <button style={styles.create_button} onClick={() => navigate(`/ProjectCreate`)}>Create New Project</button>
             <div style={styles.projectContainer}>
                 {currentProjects.map(project => (
                     <div key={project.projectId} onClick={() => handleProjectClick(project.projectId)} style={styles.projectCard}>
@@ -154,3 +151,5 @@ function Home() {
 }
 
 export default Home;
+
+
