@@ -30,32 +30,68 @@ function Project() {
 
     // 렌더링 로직 및 기타 함수들...
 
+    const handleSuccessChange = (todoId, isChecked) => {
+        setTodos(todos => todos.map(todo =>
+            todo.todoId === todoId ? { ...todo, success: isChecked } : todo
+        ));
+    };
+
     const handleStart = (todoId) => {
         const startTime = new Date();
-        axios.post(`http://localhost:3000/todo/start`, {
-            startTime: startTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId
+        const userId = 23
+        const numericProjectId = Number(projectId);
+        const numerictodoId = Number(todoId);
+
+        const startTimedata = {
+            userId: userId,
+            startTime: startTime,
+            todoId: numerictodoId,
+            projectId: numericProjectId
+        }
+
+        axios.post(`http://localhost:3000/todo/start`, JSON.stringify(startTimedata), {
+            headers: { "Content-Type": "application/json" },
         })
             .then(response => {
                 updateTodoState(todoId, { startTime: startTime });
+
+                return axios.get(`http://localhost:3000/todo/${projectId}`);
+            })
+            .then(response => {
+                console.log('retry Todos data:', response.data.todosByProjectId);
             })
             .catch(error => {
                 console.error('Network error:', error);
             });
+
     };
 
     const handleStop = (todoId) => {
         const stopTime = new Date();
-        const success = true;
-        axios.post(`http://localhost:3000/todo/stop`, {
-            stopTime: stopTime.toISOString(),
-            todoId: todoId,
-            projectId: projectId,
-            success: success
+        // success 값을 찾아서 해당 todo의 현재 상태에 따라 설정합니다.
+        const todo = todos.find(todo => todo.todoId === todoId);
+        const success = todo ? todo.success : false;
+        const userId = 23
+        const numericProjectId = Number(projectId);
+        const numerictodoId = Number(todoId);
+
+        const stopTimedata = {
+            userId: userId,
+            stopTime: stopTime,
+            todoId: numerictodoId,
+            projectId: numericProjectId,
+            sucess: success // success 상태를 서버로 전송
+        }
+
+        axios.post(`http://localhost:3000/todo/stop`, JSON.stringify(stopTimedata), {
+            headers: { "Content-Type": "application/json" },
         })
             .then(response => {
-                updateTodoState(todoId, { stopTime: stopTime });
+                updateTodoState(todoId, { stopTime: stopTime, success: success });
+                return axios.get(`http://localhost:3000/todo/${projectId}`);
+            })
+            .then(response => {
+                console.log('retry stopTodos data:', response.data.todosByProjectId);
             })
             .catch(error => {
                 console.error('Network error:', error);
@@ -82,8 +118,14 @@ function Project() {
             {todos.map((todo) => (
                 <div key={todo.todoId}>
                     <span>{todo.todoName}</span>
-                    {!todo.startTime && <button onClick={() => handleStart(todo.todoId)}>Start</button>}
-                    {todo.startTime && !todo.endTime && <button onClick={() => handleStop(todo.todoId)}>Stop</button>}
+                    <button onClick={() => handleStart(todo.todoId)}>Start</button>
+                    <button onClick={() => handleStop(todo.todoId)}>Stop</button>
+                    <input
+                        type="checkbox"
+                        checked={todo.success}
+                        onChange={(e) => handleSuccessChange(todo.todoId, e.target.checked)}
+                    />
+                    {todo.success ? <span>성공</span> : <span>실패</span>}
                     {todo.endTime && <span>완료</span>}
                 </div>
             ))}
