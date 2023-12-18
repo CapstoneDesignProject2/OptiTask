@@ -9,35 +9,33 @@ function Project() {
     const [project, setProject] = useState(null);
     const [todos, setTodos] = useState([]);
 
+
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
         axios.get(`http://localhost:3000/project/${projectId}`)
             .then(response => {
+                console.log('Project data:', response.data);
                 setProject(response.data);
 
                 return axios.get(`http://localhost:3000/todo/${projectId}`);
             })
             .then(response => {
-                setTodos(response.data);
+                console.log('Todos data:', response.data.todosByProjectId);
+                setTodos(response.data.todosByProjectId);
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Error fetching data:', error);
             });
     }, [projectId]);
 
     // 렌더링 로직 및 기타 함수들...
 
-
-
     const handleStart = (todoId) => {
         const startTime = new Date();
-        const StartData = {
-            startTime,
-            todoId,
-            projectId
-        }
-        axios.post(`http://localhost:3000/todo/start`, JSON.stringify(StartData), {
-            headers: { "Content-Type": "application/json" },
+        axios.post(`http://localhost:3000/todo/start`, {
+            startTime: startTime.toISOString(),
+            todoId: todoId,
+            projectId: projectId
         })
             .then(response => {
                 updateTodoState(todoId, { startTime: startTime });
@@ -47,21 +45,15 @@ function Project() {
             });
     };
 
-
-
     const handleStop = (todoId) => {
         const stopTime = new Date();
         const success = true;
-        const StopData = {
-            stopTime,
-            todoId,
-            projectId,
-            success
-        }
-        axios.post(`http://localhost:3000/todo/stop`, JSON.stringify(StopData), {
-            headers: { "Content-Type": "application/json" },
+        axios.post(`http://localhost:3000/todo/stop`, {
+            stopTime: stopTime.toISOString(),
+            todoId: todoId,
+            projectId: projectId,
+            success: success
         })
-
             .then(response => {
                 updateTodoState(todoId, { stopTime: stopTime });
             })
@@ -86,12 +78,12 @@ function Project() {
 
     return (
         <div>
-            <h1>{project.name}</h1>
+            <h1>{project.projectName}</h1>
             {todos.map((todo) => (
-                <div key={todo.id}>
-                    <span>{todo.name}</span>
-                    {!todo.startTime && <button onClick={() => handleStart(todo.id)}>Start</button>}
-                    {todo.startTime && !todo.endTime && <button onClick={() => handleStop(todo.id)}>Stop</button>}
+                <div key={todo.todoId}>
+                    <span>{todo.todoName}</span>
+                    {!todo.startTime && <button onClick={() => handleStart(todo.todoId)}>Start</button>}
+                    {todo.startTime && !todo.endTime && <button onClick={() => handleStop(todo.todoId)}>Stop</button>}
                     {todo.endTime && <span>완료</span>}
                 </div>
             ))}
