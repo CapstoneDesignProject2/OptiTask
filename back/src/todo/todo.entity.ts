@@ -24,6 +24,6 @@ export class Todo {
     @Column()
     success: boolean;
 
-    @ManyToOne(() => Project, project => project.projectId)
+    @ManyToOne(() => Project, project => project.projectId, { onDelete: 'CASCADE' })
     project: Project;
 }

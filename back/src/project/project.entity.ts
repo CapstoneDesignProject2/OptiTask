@@ -12,6 +12,6 @@ export class Project {
   @Column()
   deadline: Date;
 
-  @ManyToOne(type => User, user => user.projects)
+  @ManyToOne(type => User, user => user.projects, { onDelete: 'CASCADE' })
   user: User;
 }
