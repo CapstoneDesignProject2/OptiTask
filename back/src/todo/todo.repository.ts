@@ -27,9 +27,10 @@ export class TodoRepository {
   }
   async findOneTodo(userId: number, projectId: number, todoId: number): Promise<Todo> {
     return this.todoRepository.createQueryBuilder("todo")
+        .innerJoinAndSelect("todo.project", "project")
         .innerJoinAndSelect("project.user", "user", "user.userId = :userId", { userId })
-        .innerJoinAndSelect("todo.project", "project", "project.projectID = :projectId", { projectId })
-        .where("todo.todoId = :todoId", { todoId })
+        .where("project.projectID = :projectId", { projectId })
+        .andWhere("todo.todoId = :todoId", { todoId })
         .getOne();
   }
   async findProjectByProjectId(projectId: number): Promise<Project> {
