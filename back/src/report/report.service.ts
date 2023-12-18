@@ -116,7 +116,7 @@ export class ReportService {
     }
   }
   async createReport(): Promise<Report> {
-    return await this.createReport();
+    return await this.reportRepository.createReport();
   }
   async saveReport(report: Report) {
     return this.reportRepository.saveReport(report);
