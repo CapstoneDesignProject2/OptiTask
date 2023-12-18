@@ -145,7 +145,7 @@ function Home() {
                 <button style={styles.button} onClick={prevProjects} disabled={currentIndex === 0}>← Previous</button>
                 <button style={styles.button} onClick={nextProjects} disabled={(currentIndex + 1) * projectsPerPage >= projects.length}>Next →</button>
             </div>
-            <button style={styles.create_button} onClick={() => navigate('/mypage')}>Go to MyPage</button>
+            <button style={styles.create_button} onClick={() => navigate('/Mypage')}>Go to MyPage</button>
         </div>
     );
 }
