@@ -12,7 +12,7 @@ export class ReportController {
     const userId = req.user.userId;
     return this.reportService.findWeeklyReport(userId, reportId);
   }
-  @Get('project/:projectId')
+  @Get('/project/:projectId')
   findWeeklyReportsByProjectId(@Request() req: any, @Param('projectId') projectId: number) {
     const userId = req.user.userId;
     return this.reportService.findWeeklyReportsByProjectId(userId, projectId)

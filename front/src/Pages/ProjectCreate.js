@@ -62,26 +62,27 @@ function ProjectCreate() {
 
     const handleAddTodo = () => {
         if (todoInput.trim() !== '') {
-            setTodos([...todos, { id: Date.now(), text: todoInput, completed: false }]);
+            // 문자열을 직접 todos 배열에 추가합니다.
+            setTodos([...todos, todoInput.trim()]);
             setTodoInput('');
         }
     };
-
 
     // 서버로 새 프로젝트 데이터를 POST 요청으로 전송합니다.
     const handleSubmit = () => {
 
         // ToDo 목록을 문자열 배열로 변환합니다.
-        const todoList = todos.map(todo => todo.text);
         const userId = 23;
         // 프로젝트 데이터 객체를 생성합니다.
         const projectData = {
             userId,
             projectName,
-            todoList,
-            deadline: new Date(deadline).toISOString() // ISO 형식의 문자열로 변환
+            todoList: todos,
+            deadline
         };
-        axios.post(`http://localhost:3000/project`, projectData)
+        axios.post(`https://optitask.site/api/project`, JSON.stringify(projectData), {
+            headers: { "Content-Type": "application/json" },
+        })
             .then(response => {
                 // 요청이 성공했으면 홈 페이지로 이동합니다.
                 navigate('/');
@@ -108,8 +109,9 @@ function ProjectCreate() {
 
             <div style={styles.todoListContainer}>
                 <ul style={styles.todoList}>
-                    {todos.map((todo) => (
-                        <li key={todo.id} style={styles.todoItem}>{todo.text}</li>
+                    {todos.map((todo, index) => (
+                        // todo는 이제 문자열이므로, 직접 렌더링합니다.
+                        <li key={index} style={styles.todoItem}>{todo}</li>
                     ))}
                 </ul>
             </div>
