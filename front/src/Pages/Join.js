@@ -62,7 +62,7 @@ function Join() {
                 password: pw,
             };
             console.log(reqdata);
-            const response = await axios.post(`http://localhost:3000/api/users/signup`, JSON.stringify(reqdata), {
+            const response = await axios.post(`http://localhost:3000/users/signup`, JSON.stringify(reqdata), {
                 headers: { "Content-Type": "application/json" },
             });
             console.log("response: ", response);
