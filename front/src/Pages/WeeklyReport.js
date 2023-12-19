@@ -13,15 +13,18 @@ const WeeklyReport = () => {
     const [reportTrend, setReportTrend] = useState({});
     const [advice, setAdvice] = useState('');
     const [reportId, setReportId] = useState(null);
-    const [report, setReport] = useState(null);
+    const [report, setReport] = useState({});
+    const [lastreport, setLastReport] = useState({});
     
     // report 전체 받아오기
     const findWeeklyReportsByProjectID = () => {
         // find Weekly Reports By ProjectID
         axios.get(`http://localhost:3000/report/project/${projectId}`)
             .then(response=> {
+                const reportsArray = response.data;
                 console.log(response.data);
-                setReportTrend(response.data);
+                setReports(reportsArray);
+                console.log(reports);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -45,8 +48,8 @@ const WeeklyReport = () => {
         // find report trend
         axios.get(`http://localhost:3000/report/trend/${projectId}`)
         .then(response=> {
-            console.log(response.data);
             setReportTrend(response.data);
+            console.log(reportTrend);
         })
     }
 
@@ -116,13 +119,6 @@ const WeeklyReport = () => {
             <br/>
             <button onClick={findWeeklyReport}>report 한개 받아오기</button>
             
-            {Array.isArray(reports) && reports.map((report, index) => ( 
-                <div key={index}>
-                    <h2>{`Week ${report.reportWeek}`}</h2>
-                    <p>{`Total Time: ${report.weeklyTotalTime}`}</p>
-                    <p>{`Success Todos: ${report.successTodo}`}</p>
-                </div>
-            ))}
             <h2>프로젝트 Trend</h2>
             {/* reportTrend 데이터를 사용하여 추세 정보 표시 */}
             <div style={chartContainerStyle}>
