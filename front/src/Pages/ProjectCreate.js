@@ -80,7 +80,7 @@ function ProjectCreate() {
             todoList: todos,
             deadline
         };
-        axios.post(`http://localhost:3000/project`, JSON.stringify(projectData), {
+        axios.post(`https://optitask.site/api/project`, JSON.stringify(projectData), {
             headers: { "Content-Type": "application/json" },
         })
             .then(response => {

@@ -23,7 +23,7 @@ const WeeklyReport = () => {
     // report 전체 받아오기
     const findWeeklyReportsByProjectID = () => {
         // find Weekly Reports By ProjectID
-        axios.get(`http://localhost:3000/report/project/${projectId}`)
+        axios.get(`https://optitask.site/api/report/project/${projectId}`)
             .then(response => {
                 console.log(response.data);
                 setReportArray(response.data);
@@ -36,7 +36,7 @@ const WeeklyReport = () => {
 
     // // report 한개 받아오기
     // const findWeeklyReport = () => {
-    //     axios.get(`http://localhost:3000/report/${reportId}`)
+    //     axios.get(`https://optitask.site/api/report/${reportId}`)
     //         .then(response=> {
     //             console.log(response.data);
     //             setReport(response.data);
@@ -48,7 +48,7 @@ const WeeklyReport = () => {
 
     const findReportTrend = () => {
         // find report trend
-        axios.get(`http://localhost:3000/report/trend/${projectId}`)
+        axios.get(`https://optitask.site/api/report/trend/${projectId}`)
             .then(response => {
                 setReportTrend(response.data);
                 console.log(reportTrend);
@@ -57,7 +57,7 @@ const WeeklyReport = () => {
 
     // weakly report 접속해서 weakly report를 한개 생성함
     useEffect(() => {
-        axios.post(`http://localhost:3000/report`);
+        axios.post(`https://optitask.site/api/report`);
         findWeeklyReportsByProjectID();
         findReportTrend();
     }, []);

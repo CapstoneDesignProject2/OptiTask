@@ -61,12 +61,12 @@ function Project() {
 
     // projectId를 사용하여 서버로부터 프로젝트 데이터를 불러와서 project , todos 변수에 할당( json 배열 형태 )하는 함수
     useEffect(() => {
-        axios.get(`http://localhost:3000/project/${projectId}`)
+        axios.get(`https://optitask.site/api/project/${projectId}`)
             .then(response => {
                 console.log('Project data:', response.data);
                 setProject(response.data);
 
-                return axios.get(`http://localhost:3000/todo/${projectId}`);
+                return axios.get(`https://optitask.site/api/todo/${projectId}`);
             })
             .then(response => {
                 console.log('Todos data:', response.data.todosByProjectId);
@@ -83,7 +83,7 @@ function Project() {
         // 서버에 DELETE 요청을 보내는 부분
         const numericProjectId = Number(projectId);
 
-        axios.delete(`http://localhost:3000/project`, {
+        axios.delete(`https://optitask.site/api/project`, {
             headers: { "Content-Type": "application/json" },
             data: { projectId: numericProjectId }
         })
@@ -119,13 +119,13 @@ function Project() {
             projectId: numericProjectId
         }
 
-        axios.post(`http://localhost:3000/todo/start`, JSON.stringify(startTimedata), {
+        axios.post(`https://optitask.site/api/todo/start`, JSON.stringify(startTimedata), {
             headers: { "Content-Type": "application/json" },
         })
             .then(response => {
                 updateTodoState(todoId, { startTime: startTime });
 
-                return axios.get(`http://localhost:3000/todo/${projectId}`);
+                return axios.get(`https://optitask.site/api/todo/${projectId}`);
             })
             .then(response => {
                 console.log('retry Todos data:', response.data.todosByProjectId);
@@ -154,12 +154,12 @@ function Project() {
             sucess: success // success 상태를 서버로 전송
         }
 
-        axios.post(`http://localhost:3000/todo/stop`, JSON.stringify(stopTimedata), {
+        axios.post(`https://optitask.site/api/todo/stop`, JSON.stringify(stopTimedata), {
             headers: { "Content-Type": "application/json" },
         })
             .then(response => {
                 updateTodoState(todoId, { stopTime: stopTime, success: success });
-                return axios.get(`http://localhost:3000/todo/${projectId}`);
+                return axios.get(`https://optitask.site/api/todo/${projectId}`);
             })
             .then(response => {
                 console.log('retry stopTodos data:', response.data.todosByProjectId);
