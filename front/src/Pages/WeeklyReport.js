@@ -9,22 +9,20 @@ import 'chart.js/auto';
 
 const WeeklyReport = () => {
     const { projectId } = useParams();
-    const [reports, setReports] = useState([]);
+    const [reportArray, setReportArray] = useState([]);
     const [reportTrend, setReportTrend] = useState({});
     const [advice, setAdvice] = useState('');
     const [reportId, setReportId] = useState(null);
     const [report, setReport] = useState({});
-    const [lastreport, setLastReport] = useState({});
+    const [lastReport, setLastReport] = useState({});
     
     // report 전체 받아오기
     const findWeeklyReportsByProjectID = () => {
         // find Weekly Reports By ProjectID
         axios.get(`http://localhost:3000/report/project/${projectId}`)
             .then(response=> {
-                const reportsArray = response.data;
                 console.log(response.data);
-                setReports(reportsArray);
-                console.log(reports);
+                setReportArray(response.data);
             })
             .catch(error => {
                 console.error('There was an error!', error);
@@ -32,17 +30,17 @@ const WeeklyReport = () => {
             })
     }
     
-    // report 한개 받아오기
-    const findWeeklyReport = () => {
-        axios.get(`http://localhost:3000/report/${reportId}`)
-            .then(response=> {
-                console.log(response.data);
-                setReport(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error!', error);
-            })
-    }
+    // // report 한개 받아오기
+    // const findWeeklyReport = () => {
+    //     axios.get(`http://localhost:3000/report/${reportId}`)
+    //         .then(response=> {
+    //             console.log(response.data);
+    //             setReport(response.data);
+    //         })
+    //         .catch(error => {
+    //             console.error('There was an error!', error);
+    //         })
+    // }
 
     const findReportTrend = () => {
         // find report trend
@@ -58,8 +56,12 @@ const WeeklyReport = () => {
         axios.post(`http://localhost:3000/report`);
         findWeeklyReportsByProjectID();
         findReportTrend();
-        
     },[]);
+    useEffect(() => {
+        if (reportArray.length > 0) {
+            setLastReport(reportArray[reportArray.length - 1]);
+        }
+    }, [reportArray]); // Dependency array
     
     // Options for the Line chart
     const lineChartOptions = {
@@ -115,10 +117,15 @@ const WeeklyReport = () => {
     return (
         <div>
             <Title></Title>
-            <input type="text" value={reportId} onChange={(e) => setReportId(e.target.value)} placeholder="받고싶은report를 적으시오"/>
-            <br/>
-            <button onClick={findWeeklyReport}>report 한개 받아오기</button>
-            
+            {lastReport && (
+                <div>
+                    <h3>Last Report Details:</h3>
+                    <p>week : {reportArray.length-1}</p>
+                    <p>이번주까지 project 활동 시간: {lastReport.weeklyTotalTime}</p>
+                    <p>이번주까지 완료한 Todo: {lastReport.successTodo}</p>
+                    {/* ... other lastReport details ... */}
+                </div>
+            )}
             <h2>프로젝트 Trend</h2>
             {/* reportTrend 데이터를 사용하여 추세 정보 표시 */}
             <div style={chartContainerStyle}>
