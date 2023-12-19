@@ -3,15 +3,15 @@ import { User } from '../user/user.entity';
 
 @Entity()
 export class Project {
-    @PrimaryGeneratedColumn()
-    projectId: number;
+  @PrimaryGeneratedColumn()
+  projectId: number;
 
-    @Column({ length: 255 })
-    projectName: string;
+  @Column({ length: 255 })
+  projectName: string;
 
-    @Column()
-    deadline: Date;
+  @Column()
+  deadline: Date;
 
-    @ManyToOne(type => User, user => user.projects)
-    user: User;
+  @ManyToOne(type => User, user => user.projects, { onDelete: 'CASCADE' })
+  user: User;
 }

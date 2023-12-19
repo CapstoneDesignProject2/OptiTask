@@ -13,11 +13,17 @@ export class Todo {
     startTime: Date;
 
     @Column()
+    tempTime: Date;
+
+    @Column()
     endTime: Date;
 
     @Column()
+    todoTotalTime: number;
+    
+    @Column()
     success: boolean;
 
-    @ManyToOne(() => Project, project => project.projectId)
+    @ManyToOne(() => Project, project => project.projectId, { onDelete: 'CASCADE' })
     project: Project;
 }

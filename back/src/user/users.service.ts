@@ -27,6 +27,12 @@ export class UsersService {
      });
   }
 
+  async findOneByUserId(userId: number): Promise<User> {
+    return this.userRepository.findOne({
+      where: { userId: userId },
+    });
+  }
+
   async modify(modifyUserDTO: ModifyUserDTO): Promise<User> {
     const user = await this.userRepository.findOne({ 
       where: { id: modifyUserDTO.id },

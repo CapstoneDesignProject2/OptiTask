@@ -1,6 +1,6 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Title from '../Components/Title';
 
 
 function Home() {
@@ -8,6 +8,8 @@ function Home() {
     const [projects, setProjects] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
     const projectsPerPage = 3;
+    const [userId, setUserId] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     const styles = {
         container: {
@@ -59,7 +61,7 @@ function Home() {
             color: 'white',
             fontSize: '18px', // 글씨 크기 증가
             borderRadius: '5px', // 버튼의 모서리 둥글게
-            marginTop: '-180px'
+            marginTop: '-20px'
         },
 
         header: {
@@ -80,25 +82,36 @@ function Home() {
     };
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    
+
     const goToLogin = () => {
         navigate("/login");
     }
 
-    // useEffect(() => {
-    //     // 사용자의 로그인 상태를 확인합니다.
-    //     const token = localStorage.getItem('userToken');
-    //     if (!token) {
-    //         // 토큰이 없으면 로그인 페이지로 리디렉션합니다.
-    //         navigate('/login');
-    //     }
+    useEffect(() => {
+        // 사용자의 로그인 상태를 확인
+        const token = localStorage.getItem('access_token');
+        if (token) {
+            // 서버로부터 프로젝트 데이터 가져오기
+            axios.get(`https://optitask.site/api/project`)
+                .then(response => {
+                    // 성공적으로 데이터를 받아오면 state 업데이트
+                    setProjects(response.data.AllProjects); // 응답 구조에 따라 변경될 수 있습니다.
+                })
+                .catch(error => {
+                    console.error('Error fetching projects', error);
+                });
 
-    //     // 서버로부터 프로젝트 데이터를 가져오는 로직
-    //     // 데이터를 최신순으로 정렬
-    // }, [navigate]);
+            setIsLoading(false);
+        } else {
+            // 토큰이 없으면 로그인 페이지로 리디렉션
+            navigate('/login');
+        }
+    }, [navigate]);
+
 
     const handleProjectClick = (projectId) => {
         navigate(`/project/${projectId}`);
+
     };
 
     const nextProjects = () => {
@@ -119,12 +132,12 @@ function Home() {
     return (
         <div style={styles.container}>
             <h1 style={styles.header}>OptiTask</h1>
-            <button style={styles.create_button} onClick={() => navigate('/Projectcreate')}>Create New Project</button>
+            <button style={styles.create_button} onClick={() => navigate(`/ProjectCreate`)}>Create New Project</button>
             <div style={styles.projectContainer}>
                 {currentProjects.map(project => (
-                    <div key={project.id} onClick={() => handleProjectClick(project.id)} style={styles.projectCard}>
-                        <h3>{project.name}</h3>
-                        <p>Created on: {project.creationDate}</p>
+                    <div key={project.projectId} onClick={() => handleProjectClick(project.projectId)} style={styles.projectCard}>
+                        <h3>{project.projectName}</h3>
+                        <p>Created on: {project.deadline}</p>
                     </div>
                 ))}
             </div>
@@ -132,9 +145,11 @@ function Home() {
                 <button style={styles.button} onClick={prevProjects} disabled={currentIndex === 0}>← Previous</button>
                 <button style={styles.button} onClick={nextProjects} disabled={(currentIndex + 1) * projectsPerPage >= projects.length}>Next →</button>
             </div>
-            <button style={styles.create_button} onClick={() => navigate('/mypage')}>Go to MyPage</button>
+            <button style={styles.create_button} onClick={() => navigate('/Mypage')}>Go to MyPage</button>
         </div>
     );
 }
 
 export default Home;
+
+
