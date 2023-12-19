@@ -1,9 +1,9 @@
-import React, { useEffect, useState} from "react";
-import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Title from '../Components/Title';
 
-function Mypage({}) {
+function Mypage({ }) {
     const navigate = useNavigate();
     const [id, setID] = useState('');
     const [showPasswordChange, setShowPasswordChange] = useState(false);
@@ -33,8 +33,8 @@ function Mypage({}) {
             };
             console.log(reqdata);
 
-            const response = await axios.post('https://optitask.site/api/users/modify', JSON.stringify(reqdata), {
-                headers: {"Content-Type": `application/json`},
+            const response = await axios.post('https://localhost:3000/api/users/modify', JSON.stringify(reqdata), {
+                headers: { "Content-Type": `application/json` },
             });
             console.log("response:", response);
 
@@ -97,11 +97,11 @@ function Mypage({}) {
             <Title></Title>
             {!showPasswordChange && (
                 <>
-                    <button style = {styles.button} onClick={logout}>Logout</button>
-                    <button style = {styles.button} onClick={() => setShowPasswordChange(!showPasswordChange)}>비밀번호 변경</button>
+                    <button style={styles.button} onClick={logout}>Logout</button>
+                    <button style={styles.button} onClick={() => setShowPasswordChange(!showPasswordChange)}>비밀번호 변경</button>
                 </>
             )}
-            
+
             {showPasswordChange && (
                 <div style={styles.inputContainer}>
                     <h3>비밀번호를 변경하십시오.</h3>
@@ -139,5 +139,5 @@ function Mypage({}) {
         </div>
     );
 }
-    
+
 export default Mypage;

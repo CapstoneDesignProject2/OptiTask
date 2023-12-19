@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Title from '../Components/Title';
 
@@ -12,7 +12,7 @@ const WeeklyReport = () => {
     useEffect(() => {
         const fetchReports = async () => {
             try {
-                const response = await axios.get(`https://optitask.site/api/report/${userId}/${projectId}`);
+                const response = await axios.get(`http://localhost:3000/api/report/${userId}/${projectId}`);
                 setReports(response.data);
                 setLoading(false);
             } catch (err) {
