@@ -12,23 +12,23 @@ const WeeklyReport = () => {
 
     useEffect(() => {
         // 주간 보고서 생성
-        axios.post('/report')
+        axios.post(`http://localhost:3000/report`)
             .then(() => {
                 // 특정 프로젝트의 모든 주간 보고서 조회
-                return axios.get(`/report/${projectId}`);
+                return axios.get(`http://localhost:3000/report/${projectId}`);
             })
             .then(response => {
                 setReports(response.data);
                 // 프로젝트의 추세 데이터 조회
-                return axios.get(`/report/trend/${projectId}`);
+                return axios.get(`http://localhost:3000/report/trend/${projectId}`);
             })
             .then(response => {
-                setReportTrend(response.data);
-                // 추세에 대한 조언 조회
-                return axios.get(`/report/trend/${projectId}/advice`);
-            })
-            .then(response => {
-                setAdvice(response.data);
+            //     setReportTrend(response.data);
+            //     // 추세에 대한 조언 조회
+            //     return axios.get(`/report/trend/${projectId}/advice`);
+            // })
+            // .then(response => {
+            //  setAdvice(response.data);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -44,7 +44,7 @@ const WeeklyReport = () => {
     return (
         <div>
             <Title></Title>
-            {reports.map((report, index) => (
+            {Array.isArray(reports) && reports.map((report, index) => ( 
                 <div key={index}>
                     <h2>{`Week ${report.reportWeek}`}</h2>
                     <p>{`Total Time: ${report.weeklyTotalTime}`}</p>
