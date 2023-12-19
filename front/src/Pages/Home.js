@@ -61,7 +61,7 @@ function Home() {
             color: 'white',
             fontSize: '18px', // 글씨 크기 증가
             borderRadius: '5px', // 버튼의 모서리 둥글게
-            marginTop: '-180px'
+            marginTop: '-20px'
         },
 
         header: {
@@ -92,7 +92,7 @@ function Home() {
         const token = localStorage.getItem('access_token');
         if (token) {
             // 서버로부터 프로젝트 데이터 가져오기
-            axios.get(`http://localhost:3000/project/`)
+            axios.get(`https://optitask.site/api/project`)
                 .then(response => {
                     // 성공적으로 데이터를 받아오면 state 업데이트
                     setProjects(response.data.AllProjects); // 응답 구조에 따라 변경될 수 있습니다.
@@ -145,7 +145,7 @@ function Home() {
                 <button style={styles.button} onClick={prevProjects} disabled={currentIndex === 0}>← Previous</button>
                 <button style={styles.button} onClick={nextProjects} disabled={(currentIndex + 1) * projectsPerPage >= projects.length}>Next →</button>
             </div>
-            <button style={styles.create_button} onClick={() => navigate('/mypage')}>Go to MyPage</button>
+            <button style={styles.create_button} onClick={() => navigate('/Mypage')}>Go to MyPage</button>
         </div>
     );
 }

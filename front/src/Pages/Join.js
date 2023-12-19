@@ -1,7 +1,6 @@
-import React, { useEffect, useState} from "react";
 import axios from "axios";
-import {useNavigate} from 'react-router-dom';
-import Button from '../Components/Button';
+import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import Title from '../Components/Title';
 
 function Join() {
@@ -9,7 +8,7 @@ function Join() {
     const [id, setID] = useState("");
     const [pw, setPW] = useState("");
     const [pwcheck, setPWCheck] = useState("");
-    
+
     const goToLogin = () => {
         navigate("/login");
     }
@@ -52,8 +51,8 @@ function Join() {
     };
 
     const handleSignUp = async () => {
-        try{
-            if (pw != pwcheck){
+        try {
+            if (pw != pwcheck) {
                 alert("비밀번호가 다릅니다");
                 return;
             }
@@ -69,13 +68,13 @@ function Join() {
             console.log("response: ", response);
 
             // 회원가입이 성공되었는지 확인
-            if (response.status === 201){
+            if (response.status === 201) {
                 goToLogin(); // 회원가입했으니 로그인하러 가기
             }
-            else{
+            else {
                 alert("Signup Failed");
             }
-        } catch(error) {
+        } catch (error) {
             console.error("Signup error", error);
             console.log(pw);
             console.log(id);
@@ -83,7 +82,7 @@ function Join() {
         }
     };
 
-    return(
+    return (
         <div style={styles.container}>
             <Title></Title>
             <input type="text" value={id} onChange={(e) => setID(e.target.value)} placeholder="ID" style={styles.input} />
@@ -92,7 +91,7 @@ function Join() {
             <br />
             <input type="password" value={pwcheck} onChange={(e) => setPWCheck(e.target.value)} placeholder="PW Check" style={styles.input} />
             <br />
-            <button type="submit" text = "Join" onClick={handleSignUp} style={styles.button}>Sign Up</button>
+            <button type="submit" text="Join" onClick={handleSignUp} style={styles.button}>Sign Up</button>
         </div>
     );
 }
