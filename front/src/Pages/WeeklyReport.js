@@ -19,15 +19,19 @@ const WeeklyReport = () => {
             })
             .then(response => {
                 setReports(response.data);
+                console.log(reports);
                 // 프로젝트의 추세 데이터 조회
                 return axios.get(`http://localhost:3000/report/trend/${projectId}`);
             })
-            .then(response => {
-            //     setReportTrend(response.data);
+            .then(response=> {
+                setReportTrend(response.data);
+                console.log(reportTrend);
+            })
+            //.then(response => {
             //     // 추세에 대한 조언 조회
             //     return axios.get(`/report/trend/${projectId}/advice`);
             // })
-            // .then(response => {
+             .then(response => {
             //  setAdvice(response.data);
                 setIsLoading(false);
             })
