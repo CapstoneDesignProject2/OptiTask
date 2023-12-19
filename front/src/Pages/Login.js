@@ -1,7 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import Button from '../Components/Button';
 import Title from '../Components/Title';
 
 function Login({ }) {
@@ -61,16 +60,16 @@ function Login({ }) {
     };
 
     const handleSignIn = async () => {
-        try{
+        try {
             const reqdata = {
                 id: id,
                 password: pw,
             };
             console.log(reqdata);
-            const response = await axios.post(`https://optitask.site/api/auth/login`, JSON.stringify(reqdata), {
-                headers: {"Content-Type": "application/json"},
+            const response = await axios.post(`http://localhost:3000/api/auth/login`, JSON.stringify(reqdata), {
+                headers: { "Content-Type": "application/json" },
             });
-            console.log("response:" ,response);
+            console.log("response:", response);
             if (response.status === 201) {
                 localStorage.setItem("access_token", response.data.access_token); // JWT 토큰을 로컬 스토리지에 저장
                 console.log(localStorage.getItem(id));
@@ -92,7 +91,7 @@ function Login({ }) {
             <br />
             <input type="password" value={pw} onChange={(e) => setPW(e.target.value)} placeholder="PW" style={styles.input} />
             <br />
-            <button type="submit" text = "Sign In" onClick={handleSignIn} style={styles.button}>Sign In</button>
+            <button type="submit" text="Sign In" onClick={handleSignIn} style={styles.button}>Sign In</button>
             <h3 onClick={goToJoin} style={styles.h3}>or create your account</h3>
         </div>
 
