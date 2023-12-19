@@ -8,46 +8,55 @@ const WeeklyReport = () => {
     const [reports, setReports] = useState([]);
     const [reportTrend, setReportTrend] = useState({});
     const [advice, setAdvice] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
+    const [reportId, setReportId] = useState(null);
+    const [report, setReport] = useState(null);
+    
+    useEffect(()=>{
+        axios.post(`http://localhost:3000/report`);
+    },[]);
+    
 
-    useEffect(() => {
-        // 주간 보고서 생성
-        axios.post(`http://localhost:3000/report`)
-            .then(() => {
-                // 특정 프로젝트의 모든 주간 보고서 조회
-                return axios.get(`http://localhost:3000/report/${projectId}`);
-            })
-            .then(response => {
-                setReports(response.data);
-                console.log(reports);
-                // 프로젝트의 추세 데이터 조회
-                return axios.get(`http://localhost:3000/report/trend/${projectId}`);
-            })
+    const fucn = () => {
+        // find Weekly Reports By ProjectID
+        axios.get(`http://localhost:3000/report/project/${projectId}`)
             .then(response=> {
+                console.log(response.data);
                 setReportTrend(response.data);
-                console.log(reportTrend);
             })
-            //.then(response => {
-            //     // 추세에 대한 조언 조회
-            //     return axios.get(`/report/trend/${projectId}/advice`);
-            // })
-             .then(response => {
-            //  setAdvice(response.data);
-                setIsLoading(false);
+
+        // find report trend
+        axios.get(`http://localhost:3000/report/trend/${projectId}`)
+            .then(response=> {
+                console.log(response.data);
+                setReportTrend(response.data);
+            })
+        // //  find adivce for report trend
+        // axios.get(`http://localhost:3000/report/trend/${projectId}/advice`)
+        //     .then(response => {
+        //         console.log(response.data);
+        //     })
+    }
+
+    const findWeeklyReportsByProjectID = () => {
+        axios.get(`http://localhost:3000/report/${reportId}`)
+            .then(response=> {
+                console.log(response.data);
+                setReport(response.data);
             })
             .catch(error => {
-                console.error('Error fetching report data:', error);
-                setIsLoading(false);
-            });
-    }, [projectId]);
-
-    if (isLoading) {
-        return <div>Loading...</div>;
+                console.error('There was an error!', error);
+            })
     }
 
     return (
         <div>
             <Title></Title>
+            <button onClick={fucn}>report 데이터 받아오기</button>
+            <br></br>
+            <input type="text" value={reportId} onChange={(e) => setReportId(e.target.value)} placeholder="받고싶은report를 적으시오"/>
+            <br/>
+            <button onClick={findWeeklyReportsByProjectID}>report 한개 받아오기</button>
+            
             {Array.isArray(reports) && reports.map((report, index) => ( 
                 <div key={index}>
                     <h2>{`Week ${report.reportWeek}`}</h2>
