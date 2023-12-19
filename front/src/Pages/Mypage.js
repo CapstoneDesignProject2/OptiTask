@@ -33,7 +33,7 @@ function Mypage({ }) {
             };
             console.log(reqdata);
 
-            const response = await axios.post('http://localhost:3000/users/modify', JSON.stringify(reqdata), {
+            const response = await axios.post('https://optitask.site/api/users/modify', JSON.stringify(reqdata), {
                 headers: { "Content-Type": `application/json` },
             });
             console.log("response:", response);
