@@ -43,11 +43,15 @@ export class ReportService {
     reportTrend.successTodoTrend = [];
 
     weeklyReportsByProjectId.forEach((weeklyReport) => {
+      reportTrend.reportWeeks.push(weeklyReport.reportWeek);
       reportTrend.totalTimeTrend.push(weeklyReport.weeklyTotalTime);
       reportTrend.successTodoTrend.push(weeklyReport.successTodo);
       totalTime += weeklyReport.weeklyTotalTime;
       totalSuccessTodo += weeklyReport.successTodo;
     });
+    reportTrend.totalTime = totalTime;
+    reportTrend.totalSucessTodo = totalSuccessTodo;
+    
     return reportTrend;
   }
   async findAdviceForReportTrend(userId: number, projectId: number) {
